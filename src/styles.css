@@ -141,13 +141,40 @@ html.dark, html.dark body {
   100% { background-position: 0% 50%; }
 }
 
-h1 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: -0.04em; /* This is the secret to "slick" */
+/* src/styles.css */
+
+.slick-hero-animate {
+  display: inline-block; /* Crucial for padding and transform to work */
+  padding-bottom: 0.2em; /* Adds space for the 'y' tail and the float */
+  line-height: 1.1;       /* Slightly more than 0.9 to prevent clipping */
+  will-change: transform;
+  
+  /* Your existing gradient logic */
+  background: linear-gradient(
+    110deg, 
+    #0d9488 20%, 
+    #2dd4bf 40%, 
+    #5eead4 50%, 
+    #2dd4bf 60%, 
+    #0d9488 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  /* Animations */
+  animation: 
+    slick-float 5s ease-in-out infinite,
+    slick-shine 4s linear infinite;
 }
 
-.slick-float-text {
-  font-weight: 800; /* Extra bold for the impact part */
-  display: inline-block;
-  animation: float 5s ease-in-out infinite;
+@keyframes slick-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); } /* The 'y' now has room to move up/down */
+}
+
+@keyframes slick-shine {
+  to {
+    background-position: 200% center;
+  }
 }
