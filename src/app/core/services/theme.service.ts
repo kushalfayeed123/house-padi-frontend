@@ -4,8 +4,7 @@ import { Injectable, signal, effect } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   // Check specifically for 'dark' string
-  readonly isDark = signal<boolean>(localStorage.getItem('theme') === 'dark');
-
+  readonly isDark = signal<boolean>(localStorage.getItem('theme') !== 'light');
   constructor() {
     effect(() => {
       const dark = this.isDark();
