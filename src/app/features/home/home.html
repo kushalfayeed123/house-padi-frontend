@@ -1,0 +1,208 @@
+<div class="min-h-screen transition-colors duration-500 bg-transparent">
+  <nav class="fixed top-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto glass-card rounded-2xl px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <span class="text-2xl font-black gradient-text cursor-pointer">House Padi</span>
+        <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+          <a href="#" class="hover:text-brand-primary transition-colors">Buy</a>
+          <a href="#" class="hover:text-brand-primary transition-colors">Rent</a>
+          <a href="#" class="hover:text-brand-primary transition-colors">Shortlet</a>
+          <a href="#" class="hover:text-brand-primary transition-colors">Agents</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button (click)="theme.toggle()" class="p-2 glass-card rounded-xl border-none cursor-pointer">
+          {{ theme.isDark() ? '☀️' : '🌙' }}
+        </button>
+
+        <button routerLink="/auth/login" class="...">
+          Sign In
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="relative pt-44 pb-32 px-6 overflow-hidden">
+    <div class="hero-glow"></div>
+    <div class="max-w-7xl mx-auto text-center">
+      <div class="tech-badge mx-auto mb-6">Nigeria's #1 AI Property Portal</div>
+      <h1 class="text-5xl md:text-8xl font-black tracking-tight mb-8 leading-[0.9]">
+        Find a place you'll <br><span class="gradient-text">actually love.</span>
+      </h1>
+
+      <div class="max-w-4xl mx-auto glass-card p-2 rounded-[2.5rem] shadow-2xl mt-12 border-white/20">
+        <div class="flex flex-col md:flex-row items-center gap-2 p-2">
+          <div class="flex-1 w-full px-4 border-r border-slate-200 dark:border-white/10 text-left">
+            <label class="block text-[10px] uppercase font-black text-brand-primary mb-1">Location</label>
+            <input [(ngModel)]="filters.location" placeholder="Where do you want to live?"
+              class="bg-transparent outline-none w-full text-sm">
+          </div>
+          <div class="flex-1 w-full px-4 border-r border-slate-200 dark:border-white/10 text-left">
+            <label class="block text-[10px] uppercase font-black text-brand-primary mb-1">Property Type</label>
+            <select [(ngModel)]="filters.type" class="bg-transparent outline-none w-full text-sm appearance-none">
+              <option value="apartment">Apartments</option>
+              <option value="duplex">Duplexes</option>
+              <option value="office">Office Space</option>
+            </select>
+          </div>
+          <div class="flex-1 w-full px-4 text-left">
+            <label class="block text-[10px] uppercase font-black text-brand-primary mb-1">Price Range</label>
+            <input type="text" placeholder="Max Price" class="bg-transparent outline-none w-full text-sm">
+          </div>
+          <button (click)="onSearch()"
+            class="w-full md:w-auto bg-brand-primary text-white px-10 py-4 rounded-[1.8rem] font-black hover:scale-105 transition-all">
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 mb-20 flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+    @for (cat of categories; track cat) {
+    <button
+      class="glass-card px-8 py-3 rounded-full text-sm font-bold whitespace-nowrap hover:border-brand-primary/50 transition-colors">
+      {{ cat }}
+    </button>
+    }
+  </section>
+
+  <section class="max-w-7xl mx-auto px-6 mb-32">
+    <div class="flex items-end justify-between mb-12">
+      <div>
+        <h2 class="text-4xl font-black">Featured Listings</h2>
+        <p class="text-slate-500 mt-2">Hand-picked premium properties just for you.</p>
+      </div>
+      <a href="#" class="text-brand-primary font-bold hover:underline">View All Properties →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      @for (item of propStore.allProperties(); track item.id) {
+      @if (item.isFeatured) {
+      <div
+        class="group relative glass-card p-0! rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+
+        <div class="h-72 relative overflow-hidden">
+          <div class="absolute inset-0 bg-linear-to-t from-black/40 to-transparent z-10"></div>
+          <img [src]="item.images?.[0] || 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d'"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+
+          <div class="absolute top-6 left-6 z-20">
+            <span
+              class="bg-brand-primary/90 backdrop-blur-md text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/20">
+              Featured
+            </span>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <h3 class="text-2xl font-black mb-4 dark:text-white truncate tracking-tight">{{ item.title }}</h3>
+
+          <div
+            class="flex items-center gap-6 text-slate-400 dark:text-slate-500 text-xs font-bold uppercase mb-6 pb-6 border-b border-slate-100 dark:border-white/5">
+            <span class="flex items-center gap-2 tracking-widest"><span class="text-brand-primary">BED</span> {{
+              item.features.bedrooms }}</span>
+            <span class="flex items-center gap-2 tracking-widest"><span class="text-brand-primary">BATH</span> {{
+              item.features.bathrooms }}</span>
+            <span class="flex items-center gap-2 tracking-widest"><span class="text-brand-primary">SQFT</span> {{
+              item.features.area }}</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] uppercase font-black text-slate-400 leading-none mb-1">Total Price</p>
+              <p class="text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
+            </div>
+
+            <button
+              class="bg-slate-900 dark:bg-white text-white dark:text-black w-14 h-14 rounded-2xl flex items-center justify-center group-hover:bg-brand-primary group-hover:text-white group-hover:scale-110 transition-all duration-300 shadow-lg">
+              <span class="text-2xl font-light">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      }@if (propStore.allProperties().length === 0 && propStore.isLoading()) {
+      @for (i of [1,2,3]; track i) {
+      <div class="h-125 rounded-[2.5rem] bg-slate-200/50 dark:bg-white/5 animate-pulse"></div>
+      }
+      }
+      }
+    </div>
+  </section>
+
+  <section class="bg-slate-100 dark:bg-white/5 py-32 px-6 mb-32 rounded-[4rem] mx-4 lg:mx-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <div>
+        <div class="tech-badge mb-6">AI-First Technology</div>
+        <h2 class="text-5xl font-black mb-8 leading-tight">Searching for a home <br>shouldn't be a full-time job.</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-lg mb-10">
+          House Padi uses vector embeddings to understand your lifestyle. Tell us "I want a quiet place with a balcony
+          near a gym" and our engine finds it—no more scrolling through endless irrelevant lists.
+        </p>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Instant Property
+            Verification</li>
+          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Direct Chat with
+            Verified Owners</li>
+          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Virtual 3D AI Property
+            Tours</li>
+        </ul>
+      </div>
+      <div class="relative">
+        <div
+          class="aspect-square glass-card rounded-[3rem] overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-700 shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d"
+            class="w-full h-full object-cover opacity-80">
+        </div>
+        <div class="absolute -bottom-10 -left-10 glass-card p-8 rounded-3xl shadow-xl max-w-xs animate-bounce-slow">
+          <p class="text-sm italic font-medium">"Found my dream apartment in Lekki in under 5 minutes using the AI
+            chat."</p>
+          <p class="mt-4 font-black text-xs">— Michael A., Software Engineer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-200 dark:border-white/10">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+      <div class="col-span-1 md:col-span-1">
+        <h4 class="text-2xl font-black gradient-text mb-6">House Padi</h4>
+        <p class="text-slate-500 text-sm">Empowering young professionals with smart housing solutions across Nigeria.
+        </p>
+      </div>
+      <div>
+        <h5 class="font-bold mb-6">Quick Links</h5>
+        <ul class="space-y-4 text-sm text-slate-500">
+          <li><a href="#" class="hover:text-brand-primary">Properties</a></li>
+          <li><a href="#" class="hover:text-brand-primary">AI Search</a></li>
+          <li><a href="#" class="hover:text-brand-primary">Market Trends</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold mb-6">Support</h5>
+        <ul class="space-y-4 text-sm text-slate-500">
+          <li><a href="#" class="hover:text-brand-primary">Help Center</a></li>
+          <li><a href="#" class="hover:text-brand-primary">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-brand-primary">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold mb-6">Join the Community</h5>
+        <p class="text-xs text-slate-500 mb-4">Get the latest listings in your inbox.</p>
+        <div class="flex gap-2">
+          <input placeholder="Email" class="glass-card px-4 py-2 rounded-xl text-xs flex-1 outline-none">
+          <button class="bg-brand-primary text-white px-4 py-2 rounded-xl text-xs font-bold">Join</button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+      <p>© 2026 House Padi Technologies Ltd.</p>
+      <div class="flex gap-6 mt-4 md:mt-0">
+        <a href="#">Twitter</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+  </footer>
+</div>

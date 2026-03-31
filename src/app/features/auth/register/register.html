@@ -1,0 +1,39 @@
+<!-- <div class="min-h-screen bg-white dark:bg-[#050505] text-slate-900 dark:text-slate-100 transition-colors duration-500 relative flex items-center justify-center p-6">
+      <div class="hero-glow"></div>
+      
+      <div class="glass-card w-full max-w-md p-8 md:p-12 rounded-[2rem] z-10">
+        <header class="text-center mb-10">
+          <h1 class="text-4xl font-black gradient-text mb-2">Welcome Back</h1>
+          <p class="text-slate-500">Log in to manage your listings.</p>
+        </header>
+
+        <form (submit)="onLogin()" class="space-y-6">
+          <div class="space-y-1">
+            <label class="text-xs font-bold uppercase tracking-widest text-brand-primary">Email</label>
+            <input [(ngModel)]="email" name="email" required type="email" placeholder="email@address.com" class="hp-input">
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs font-bold uppercase tracking-widest text-brand-primary">Password</label>
+            <input [(ngModel)]="password" name="password" required type="password" placeholder="••••••••" class="hp-input">
+          </div>
+
+          @if (auth.error()) {
+            <p class="text-red-500 text-sm text-center">{{ auth.error() }}</p>
+          }
+
+          <button type="submit" [disabled]="auth.isLoading()" 
+                  class="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl hover:opacity-90 transition-all shadow-lg shadow-brand-primary/20">
+            {{ auth.isLoading() ? 'Authenticating...' : 'Sign In' }}
+          </button>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-slate-500">
+          New here? <a routerLink="/register" class="text-brand-primary font-bold hover:underline">Create an account</a>
+        </p>
+      </div>
+
+      <button (click)="theme.toggle()" class="fixed bottom-8 right-8 p-4 glass-card rounded-full">
+        {{ theme.isDark() ? '☀️' : '🌙' }}
+      </button>
+    </div> -->

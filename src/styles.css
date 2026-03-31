@@ -1,1 +1,77 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #0d9488;
+  --color-brand-light: #2dd4bf;
+}
+
+/* Force the selector strategy for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* --- GLOBAL REFINEMENT --- */
+html, body {
+  /* Using Slate-50: A soft, professional off-white */
+  background-color: #f8fafc; 
+  color: #0f172a;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out;
+  /* Smoother font rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dark Mode: Deep Midnight */
+html.dark, html.dark body {
+  background-color: #050505;
+  color: #f1f5f9;
+}
+
+/* --- COMPONENT STYLES --- */
+
+/* src/styles.css */
+
+.glass-card {
+  /* Semi-transparent background */
+  background: rgba(255, 255, 255, 0.7) !important;
+  /* Thin, bright border to define the edge */
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  /* The blur effect */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.dark .glass-card {
+  background: rgba(15, 23, 42, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.hero-glow {
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.08) 0%, transparent 70%);
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.dark .hero-glow {
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%);
+}
+
+
+.gradient-text {
+  @apply bg-linear-to-br from-slate-900 to-teal-600 bg-clip-text text-transparent;
+}
+
+.dark .gradient-text {
+  @apply from-white to-teal-400;
+}
