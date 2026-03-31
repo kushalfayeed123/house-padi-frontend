@@ -75,3 +75,79 @@ html.dark, html.dark body {
 .dark .gradient-text {
   @apply from-white to-teal-400;
 }
+
+/* src/styles.css */
+
+.tech-badge {
+  @apply flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.15em] w-fit;
+  background: rgba(13, 148, 136, 0.1);
+  border: 1px solid rgba(13, 148, 136, 0.3);
+  color: #0d9488; /* brand-primary */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.1);
+}
+
+.dark .tech-badge {
+  background: rgba(45, 212, 191, 0.1);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+  color: #2dd4bf; /* brand-light */
+}
+
+/* The Live Pulse Dot */
+.pulse-dot {
+  @apply w-1.5 h-1.5 rounded-full bg-current;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+
+/* src/styles.css */
+
+.slick-float-text {
+  display: inline-block;
+  animation: float 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.liquid-gradient {
+  background: linear-gradient(
+    -45deg, 
+    #0d9488, 
+    #2dd4bf, 
+    #5eead4, 
+    #0d9488
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flow 8s ease infinite;
+  filter: drop-shadow(0 4px 12px rgba(13, 148, 136, 0.15));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(-0.5deg); }
+  66% { transform: translateY(4px) rotate(0.5deg); }
+}
+
+@keyframes flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.04em; /* This is the secret to "slick" */
+}
+
+.slick-float-text {
+  font-weight: 800; /* Extra bold for the impact part */
+  display: inline-block;
+  animation: float 5s ease-in-out infinite;
+}
