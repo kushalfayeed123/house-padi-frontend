@@ -1,60 +1,63 @@
 <div class="min-h-screen transition-colors duration-500 bg-transparent">
-  <nav class="fixed top-0 w-full z-50 px-6 py-4">
-    <div class="max-w-7xl mx-auto glass-card rounded-2xl px-6 py-3 flex items-center justify-between">
+  <nav class="fixed top-0 w-full z-50 px-3 md:px-6 py-4">
+    <div class="max-w-7xl mx-auto glass-card rounded-2xl px-4 md:px-6 py-3 flex items-center justify-between">
       <div class="flex items-center gap-8">
-        <span class="text-2xl font-black gradient-text cursor-pointer">House Padi</span>
+        <span class="text-xl md:text-2xl font-black gradient-text cursor-pointer">House Padi</span>
         <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
           <a href="#" class="hover:text-brand-primary transition-colors">Buy</a>
           <a href="#" class="hover:text-brand-primary transition-colors">Rent</a>
           <a href="#" class="hover:text-brand-primary transition-colors">Shortlet</a>
-          <a href="#" class="hover:text-brand-primary transition-colors">Agents</a>
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 md:gap-4">
         <button (click)="theme.toggle()" class="p-2 glass-card rounded-xl border-none cursor-pointer">
           {{ theme.isDark() ? '☀️' : '🌙' }}
         </button>
-        <button routerLink="/auth/login" class="bg-brand-primary text-white px-6 py-2 rounded-xl font-bold text-sm">
+        <button routerLink="/auth/login"
+          class="bg-brand-primary text-white px-4 md:px-6 py-2 rounded-xl font-bold text-xs md:text-sm">
           Sign In
         </button>
       </div>
     </div>
   </nav>
 
-  <section class="relative pt-44 pb-12 px-6 overflow-hidden">
+  <section class="relative pt-32 md:pt-44 pb-12 px-6 overflow-hidden">
     <div class="hero-glow"></div>
     <div class="max-w-7xl mx-auto text-center">
-      <div class="tech-badge mx-auto mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div
+        class="tech-badge mx-auto mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 scale-90 md:scale-100">
         <span class="pulse-dot"></span>
         <span>AI-Powered</span>
         <span class="opacity-30 mx-1">|</span>
-        <span class="text-slate-900 dark:text-white">Nigeria's Smartest Property Portal</span>
+        <span class="text-slate-900 dark:text-white text-[10px] md:text-sm">Nigeria's Smartest Portal</span>
       </div>
-      <h1 class="text-5xl md:text-8xl font-black tracking-tight mb-8 leading-[0.9] text-slate-900 dark:text-white">
-        Find a place you'll <br>
+      <h1
+        class="text-4xl md:text-8xl font-black tracking-tight mb-8 leading-[1.1] md:leading-[0.9] text-slate-900 dark:text-white">
+        Find a place you'll <br class="hidden md:block">
         <span class="gradient-text slick-hero-animate inline-block">actually love.</span>
       </h1>
 
       <div class="max-w-4xl mx-auto">
-        <div class="glass-card p-2 rounded-[2.5rem] shadow-2xl border-white/20 mb-6">
-          <div class="flex flex-col md:flex-row items-center gap-2 p-2">
-            <div class="flex-1 w-full px-6 text-left">
-              <label class="block text-[10px] uppercase font-black text-brand-primary mb-1">AI Property Search</label>
-              <input [(ngModel)]="chatPrompt" (keyup.enter)="onSearch()"
-                placeholder="e.g. Quiet 2 bedroom in Lekki with a balcony"
-                class="bg-transparent outline-none w-full text-lg font-medium placeholder:text-slate-400">
+        <div class="glass-card p-2 rounded-3xl md:rounded-[2.5rem] shadow-2xl border-white/20 mb-6">
+          <div class="flex flex-col md:flex-row items-center gap-2 p-1 md:p-2">
+            <div class="flex-1 w-full px-4 md:px-6 text-left">
+              <label class="block text-[9px] md:text-[10px] uppercase font-black text-brand-primary mb-1">AI Property
+                Search</label>
+              <input [(ngModel)]="chatPrompt" (keyup.enter)="onSearch()" placeholder="Try 'Quiet 2 bedroom in Lekki...'"
+                class="bg-transparent outline-none w-full text-base md:text-lg font-medium placeholder:text-slate-400">
             </div>
             <button (click)="onSearch()" [disabled]="propStore.isLoading()"
-              class="w-full md:w-auto bg-brand-primary text-white px-10 py-4 rounded-[1.8rem] font-black hover:scale-105 transition-all">
+              class="w-full md:w-auto bg-brand-primary text-white px-10 py-3 md:py-4 rounded-2xl md:rounded-[1.8rem] font-black hover:scale-105 transition-all text-sm md:text-base">
               {{ propStore.isLoading() ? '...' : 'Search' }}
             </button>
           </div>
         </div>
 
-        <div class="flex flex-wrap justify-center gap-2 px-4 no-scrollbar">
+        <div
+          class="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-2 px-2 overflow-x-auto no-scrollbar">
           @for (cat of categories; track cat) {
           <button
-            class="bg-white/40 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-5 py-2 rounded-full text-xs font-bold hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all duration-300 shadow-sm">
+            class="bg-white/40 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-4 py-2 rounded-full text-[10px] md:text-xs font-bold whitespace-nowrap">
             {{ cat }}
           </button>
           }
@@ -63,56 +66,52 @@
     </div>
   </section>
 
-
-
   @if (propStore.isLoading() || propStore.displayedAiSummary()) {
-  <section class="max-w-4xl mx-auto px-6 mb-12 animate-in">
+  <section class="max-w-4xl mx-auto px-4 md:px-6 mb-12 animate-in">
     <div
-      class="glass-card bg-brand-primary/5 border-brand-primary/20 p-8 rounded-[2.5rem] flex gap-6 items-start relative overflow-hidden">
-      <div class="w-12 h-12 rounded-2xl bg-brand-primary flex items-center justify-center shrink-0 shadow-lg z-10">
-        @if (propStore.isLoading()) {
-        <span class="text-white animate-spin">⏳</span>
-        } @else {
-        <span class="text-white font-black text-xl">P</span>
-        }
-      </div>
-      <div class="z-10 w-full">
-        <h4 class="text-xs font-black uppercase tracking-widest text-brand-primary mb-2 flex items-center gap-2">
-          Padi's Analysis
-          @if (propStore.isTyping()) { <span class="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></span> }
-        </h4>
-        <p class="text-xl font-medium leading-relaxed dark:text-slate-200 italic">
-          "{{ propStore.displayedAiSummary() }}"<span class="cursor-ibeam">|</span>
-        </p>
+      class="glass-card bg-brand-primary/5 border-brand-primary/20 p-5 md:p-8 rounded-3xl md:rounded-[2.5rem] relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-1 h-full bg-brand-primary opacity-50"></div>
+
+      <div class="flex flex-col md:flex-row gap-4 md:gap-6 items-start relative z-10">
+        <div
+          class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-brand-primary flex items-center justify-center shrink-0 shadow-lg">
+          @if (propStore.isLoading()) {
+          <span class="text-white animate-spin text-sm">⏳</span>
+          } @else {
+          <span class="text-white font-black text-lg md:text-xl">P</span>
+          }
+        </div>
+
+        <div class="w-full">
+          <h4
+            class="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-brand-primary mb-1 md:mb-2 flex items-center gap-2">
+            Padi's Analysis
+            @if (propStore.isTyping()) { <span class="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse"></span> }
+          </h4>
+          <p class="text-base md:text-xl font-medium leading-relaxed dark:text-slate-200 italic">
+            "{{ propStore.displayedAiSummary() }}"<span class="cursor-ibeam text-brand-primary animate-pulse">|</span>
+          </p>
+        </div>
       </div>
     </div>
   </section>
   }
 
   @if (propStore.searchResults().length > 0) {
-  <section class="max-w-7xl mx-auto px-6 mb-20 animate-in">
-    <div class="mb-12">
-      <h2 class="text-4xl font-black">Tailored Results</h2>
-      <p class="text-slate-500 mt-2">Properties matching your specific request.</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+  <section class="max-w-7xl mx-auto px-6 mb-20">
+    <h2 class="text-3xl md:text-4xl font-black mb-8">Tailored Results</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
       @for (item of propStore.searchResults(); track item.id) {
-      <div
-        class="group relative glass-card p-0! rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-        <div class="h-72 relative overflow-hidden">
-          <img [src]="item.images?.[0]"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+      <div class="group glass-card p-0! rounded-3xl overflow-hidden shadow-sm">
+        <div class="h-60 md:h-72 relative">
+          <img [src]="item.images?.[0]" class="w-full h-full object-cover">
         </div>
-        <div class="p-8">
-          <h3 class="text-2xl font-black mb-4 dark:text-white truncate">{{ item.title }}</h3>
+        <div class="p-6 md:p-8">
+          <h3 class="text-xl md:text-2xl font-black mb-4 truncate">{{ item.title }}</h3>
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
-            </div>
+            <p class="text-2xl md:text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
             <button
-              class="bg-slate-900 dark:bg-white text-white dark:text-black w-14 h-14 rounded-2xl flex items-center justify-center group-hover:bg-brand-primary transition-all">
-              <span class="text-2xl font-light">→</span>
-            </button>
+              class="bg-slate-900 dark:bg-white text-white dark:text-black w-12 h-12 rounded-xl flex items-center justify-center">→</button>
           </div>
         </div>
       </div>
@@ -122,56 +121,32 @@
   }
 
   <section class="max-w-7xl mx-auto px-6 mb-32">
-    <div class="flex items-end justify-between mb-12">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-4">
       <div>
-        <h2 class="text-4xl font-black">Featured Listings</h2>
-        <p class="text-slate-500 mt-2">Hand-picked premium properties just for you.</p>
+        <h2 class="text-3xl md:text-4xl font-black">Featured Listings</h2>
+        <p class="text-slate-500 text-sm md:text-base mt-1">Hand-picked premium properties.</p>
       </div>
-      <a href="#" class="text-brand-primary font-bold hover:underline">View All Properties →</a>
+      <a href="#" class="text-brand-primary font-bold text-sm hover:underline">View All →</a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-      @if (propStore.isLoading() && propStore.featuredProperties().length === 0) {
-      @for (i of [1,2,3]; track i) {
-      <div class="h-125 rounded-[2.5rem] bg-slate-200/50 dark:bg-white/5 animate-pulse"></div>
-      }
-      }
-
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
       @for (item of propStore.featuredProperties(); track item.id) {
-      <div
-        class="group relative glass-card p-0! rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-        <div class="h-72 relative overflow-hidden">
-          <div class="absolute inset-0 bg-linear-to-t from-black/40 to-transparent z-10"></div>
-          <img [src]="item.images?.[0] || 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d'"
-            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-          <div class="absolute top-6 left-6 z-20">
-            <span
-              class="bg-brand-primary/90 backdrop-blur-md text-white text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-white/20">
-              Featured
-            </span>
-          </div>
+      <div class="group glass-card p-0! rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
+        <div class="h-60 md:h-72 relative">
+          <span
+            class="absolute top-4 left-4 z-20 bg-brand-primary text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase">Featured</span>
+          <img [src]="item.images?.[0]" class="w-full h-full object-cover">
         </div>
-
-        <div class="p-8">
-          <h3 class="text-2xl font-black mb-4 dark:text-white truncate tracking-tight">{{ item.title }}</h3>
-          <div
-            class="flex items-center gap-6 text-slate-400 dark:text-slate-500 text-xs font-bold uppercase mb-6 pb-6 border-b border-slate-100 dark:border-white/5">
-            <span class="flex items-center gap-2 tracking-widest"><span class="text-brand-primary">BED</span> {{
-              item.features.bedrooms }}</span>
-            <span class="flex items-center gap-2 tracking-widest"><span class="text-brand-primary">BATH</span> {{
-              item.features.bathrooms }}</span>
-            <span class="flex items-center gap-2 tracking-widest"><span class="text-brand-primary">SQFT</span> {{
-              item.features.area }}</span>
+        <div class="p-6 md:p-8">
+          <h3 class="text-xl md:text-2xl font-black mb-2 md:mb-4 truncate">{{ item.title }}</h3>
+          <div class="flex gap-4 text-[10px] font-bold text-slate-400 mb-4 uppercase">
+            <span>{{ item.features.bedrooms }} Bed</span>
+            <span>{{ item.features.bathrooms }} Bath</span>
           </div>
           <div class="flex items-center justify-between">
-            <div>
-              <p class="text-[10px] uppercase font-black text-slate-400 leading-none mb-1">Total Price</p>
-              <p class="text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
-            </div>
+            <p class="text-2xl md:text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
             <button
-              class="bg-slate-900 dark:bg-white text-white dark:text-black w-14 h-14 rounded-2xl flex items-center justify-center group-hover:bg-brand-primary group-hover:text-white transition-all duration-300 shadow-lg">
-              <span class="text-2xl font-light">→</span>
-            </button>
+              class="bg-slate-900 dark:bg-white text-white dark:text-black w-12 h-12 rounded-xl flex items-center justify-center">→</button>
           </div>
         </div>
       </div>
@@ -179,34 +154,21 @@
     </div>
   </section>
 
-  <section class="bg-slate-100 dark:bg-white/5 py-32 px-6 mb-32 rounded-[4rem] mx-4 lg:mx-10">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-      <div>
-        <div class="tech-badge mb-6">AI-First Technology</div>
-        <h2 class="text-5xl font-black mb-8 leading-tight">Searching for a home <br>shouldn't be a full-time job.</h2>
-        <p class="text-slate-500 dark:text-slate-400 text-lg mb-10">
-          House Padi uses vector embeddings to understand your lifestyle. Tell us "I want a quiet place with a balcony
-          near a gym" and our engine finds it—no more scrolling through endless irrelevant lists.
-        </p>
-        <ul class="space-y-4">
-          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Instant Property
-            Verification</li>
-          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Direct Chat with
-            Verified Owners</li>
-          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Virtual 3D AI Property
-            Tours</li>
+  <section class="bg-slate-100 dark:bg-white/5 py-16 md:py-32 px-6 mb-32 rounded-[3rem] md:rounded-[4rem] mx-4">
+    <div class="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row gap-12 md:gap-20 items-center">
+      <div class="w-full">
+        <div class="tech-badge mb-6 scale-90 origin-left">AI-First Technology</div>
+        <h2 class="text-3xl md:text-5xl font-black mb-6 leading-tight">Searching shouldn't be a job.</h2>
+        <p class="text-slate-500 text-base md:text-lg mb-8">Vector embeddings to understand your lifestyle.</p>
+        <ul class="space-y-3 text-sm md:text-base">
+          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Instant Verification
+          </li>
+          <li class="flex items-center gap-3 font-bold"><span class="text-brand-primary">✓</span> Direct Chat</li>
         </ul>
       </div>
-      <div class="relative">
-        <div
-          class="aspect-square glass-card rounded-[3rem] overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-700 shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d"
-            class="w-full h-full object-cover opacity-80">
-        </div>
-        <div class="absolute -bottom-10 -left-10 glass-card p-8 rounded-3xl shadow-xl max-w-xs animate-bounce-slow">
-          <p class="text-sm italic font-medium">"Found my dream apartment in Lekki in under 5 minutes using the AI
-            chat."</p>
-          <p class="mt-4 font-black text-xs">— Michael A., Software Engineer</p>
+      <div class="w-full relative">
+        <div class="aspect-square glass-card rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl">
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d" class="w-full h-full object-cover">
         </div>
       </div>
     </div>
