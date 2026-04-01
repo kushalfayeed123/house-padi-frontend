@@ -178,3 +178,144 @@ html.dark, html.dark body {
     background-position: 200% center;
   }
 }
+
+/* --- AI SEARCH ADDITIONS --- */
+
+/* Smooth Slide-up for AI Summary and Results */
+.animate-in {
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton Loading Pulse */
+.animate-pulse {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Custom Scrollbar Hide for Category Chips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hover refinement for Property Cards */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+/* Animation Delay Utilities for staggered grid entrance */
+.duration-1000 {
+  animation-duration: 1000ms;
+}
+
+/* Ensure AI Search input placeholder looks consistent */
+input::placeholder {
+  @apply text-slate-400 font-normal opacity-70;
+}
+
+/* Add a subtle glow to the brand button on hover */
+.bg-brand-primary:hover {
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.3);
+}
+/* Tighten the category section appearance */
+.flex-wrap.justify-center.gap-3 {
+  /* This ensures the chips feel 'tethered' to the search card above */
+  margin-top: -0.5rem; 
+  position: relative;
+  z-index: 10;
+}
+
+/* Give the category buttons a more 'integrated' feel */
+button.bg-white\/40 {
+  @apply backdrop-blur-md shadow-sm transition-all duration-300;
+}
+
+/* Smooth out the Hero glow so it doesn't leave a harsh line before the categories */
+.hero-glow {
+  height: 60vh; /* Scaled down from 50vw for better vertical control */
+  opacity: 0.8;
+}
+
+/* Typewriter Effect */
+.typewriter-text {
+  display: inline-block;
+  overflow: hidden;
+  border-right: 2px solid #0d9488; /* Cursor color */
+  white-space: normal;
+  animation: 
+    typing-blink 0.8s step-end infinite;
+}
+
+/* Typing Dots Animation */
+.typing-dots span {
+  animation: dot-blink 1.4s infinite both;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dot-blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+@keyframes typing-blink {
+  from, to { border-color: transparent; }
+  50% { border-color: #0d9488; }
+}
+
+/* Scanning Light Effect */
+.scan-line {
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  animation: scan 3s infinite;
+}
+
+@keyframes scan {
+  100% { transform: translateX(100%); }
+}
+
+/* Add an extra glow to the Padi icon when active */
+.bg-brand-primary.shadow-lg {
+  box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
+}
+
+/* Blinking Cursor at the end of the typing text */
+.cursor-ibeam {
+  @apply text-brand-primary font-bold ml-1;
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Optional: Add a subtle highlight to the text as it appears */
+.dark .italic {
+  text-shadow: 0 0 20px rgba(13, 148, 136, 0.1);
+}

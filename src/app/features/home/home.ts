@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+// src/app/pages/home/home.ts
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
 import { AuthStore } from '../../core/store/auth.store';
@@ -8,12 +9,12 @@ import { PropertiesStore } from '../../core/store/properties.store';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterLink, DecimalPipe],
   templateUrl: './home.html',
   styleUrl: './home.css',
-
 })
-export class Home {
+export class Home implements OnInit {
   theme = inject(ThemeService);
   auth = inject(AuthStore);
   propStore = inject(PropertiesStore);
@@ -21,16 +22,16 @@ export class Home {
 
   categories = ['Trending', 'Modern Apartments', 'Self-Contain', 'Shortlets', 'Office Space', 'Luxury Duplex'];
 
-  filters = {
-    location: '',
-    type: 'apartment'
-  };
+  // Single property for the AI input
+  chatPrompt = '';
 
   ngOnInit() {
-    this.propStore.fetch(true, 12);
+    // Initial fetch for featured properties
+    this.propStore.fetchFeatured(12);
   }
 
   onSearch() {
-    this.propStore.search(this.filters.location);
+    // Component simply triggers the store's search action
+    this.propStore.search(this.chatPrompt);
   }
 }
