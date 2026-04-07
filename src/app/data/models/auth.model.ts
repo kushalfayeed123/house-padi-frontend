@@ -12,3 +12,4 @@ export interface AuthResponse {
   user: User;
   accessToken: string; // From Swagger Security Schemes
 }
+

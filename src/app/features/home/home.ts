@@ -6,11 +6,12 @@ import { AuthStore } from '../../core/store/auth.store';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PropertiesStore } from '../../core/store/properties.store';
+import { Nav } from '../../shared/components/nav/nav';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DecimalPipe],
+  imports: [CommonModule, FormsModule, DecimalPipe, Nav, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

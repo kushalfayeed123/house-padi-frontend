@@ -3,62 +3,74 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { AuthResponse, User } from '../../data/models/auth.model';
+import { User } from '../../data/models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private readonly API_URL = '/api/v1/auth';
+  private readonly API_URL = 'https://house-padi.onrender.com/api/v1/auth';
 
-  // --- Private State ---
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('hp_token'));
   private _loading = signal(false);
   private _error = signal<string | null>(null);
-
-  // --- Public Selectors (Signals) ---
+  private _isReady = signal(false);
+    
+  
+  readonly isReady = computed(() => this._isReady());
   readonly user = computed(() => this._user());
   readonly token = computed(() => this._token());
   readonly isAuthenticated = computed(() => !!this._token());
   readonly isLoading = computed(() => this._loading());
   readonly error = computed(() => this._error());
 
-  // --- Actions ---
-
-  /** * Maps to: POST /api/v1/auth/register
-   * Expects: RegisterDto { email, password, firstName, lastName, role, phoneNumber? }
+  /**
+   * Helper to transform raw API/Supabase user to our Clean User Interface
    */
-  async register(dto: any) {
-    this.setLoading(true);
+  private mapUser(raw: any): User {
+    return {
+      id: raw.id,
+      email: raw.email,
+      // Mapping snake_case metadata to our camelCase interface
+      firstName: raw.user_metadata?.first_name || raw.email.split('@')[0],
+      lastName: raw.user_metadata?.last_name || '',
+      // Default to renter if metadata is missing
+      role: raw.user_metadata?.role || 'renter',
+      avatarUrl: raw.user_metadata?.avatar_url
+    };
+  }
+
+  async init() {
+    const token = localStorage.getItem('hp_token');
+    if (!token) return; // Resolves immediately for guests
+
     try {
-      // Per Swagger: Returns 201 on success
-      await firstValueFrom(this.http.post(`${this.API_URL}/register`, dto));
-      
-      // Navigate to login with a success message or auto-login
-      this.router.navigate(['/auth/login'], { queryParams: { registered: 'true' } });
-    } catch (err: any) {
-      this._error.set(err.error?.message || 'Registration failed. Please try again.');
-      throw err; // Allow component to handle specific local errors if needed
-    } finally {
-      this.setLoading(false);
+      // We return this call so the initializer waits for the network
+      const rawProfile = await firstValueFrom(
+        this.http.get<any>('https://house-padi.onrender.com/api/v1/profiles/me')
+      );
+      this._user.set(this.mapUser(rawProfile));
+      this._isReady.set(true);
+    } catch (err) {
+      this.logout();
     }
   }
 
-  /** * Maps to: POST /api/v1/auth/login
-   * Expects: LoginDto { email, password }
-   */
   async login(dto: any) {
     this.setLoading(true);
     try {
-      const res = await firstValueFrom(this.http.post<AuthResponse>(`${this.API_URL}/login`, dto));
-      
-      // Save session
-      localStorage.setItem('hp_token', res.accessToken);
-      this._token.set(res.accessToken);
-      this._user.set(res.user);
+      const res = await firstValueFrom(
+        this.http.post<{ access_token: string; user: any }>(`${this.API_URL}/login`, dto)
+      );
 
-      // Redirect to home or intended destination
+      localStorage.setItem('hp_token', res.access_token);
+      this._token.set(res.access_token);
+
+      // CRITICAL FIX: Map the user before setting the signal
+      const cleanUser = this.mapUser(res.user);
+      this._user.set(cleanUser);
+
       this.router.navigate(['/']);
     } catch (err: any) {
       this._error.set(err.error?.message || 'Invalid email or password.');
@@ -67,9 +79,19 @@ export class AuthStore {
     }
   }
 
-  /**
-   * Clears state and local storage
-   */
+  async register(dto: any) {
+    this.setLoading(true);
+    try {
+      await firstValueFrom(this.http.post(`${this.API_URL}/register`, dto));
+      this.router.navigate(['/auth/login'], { queryParams: { registered: 'true' } });
+    } catch (err: any) {
+      this._error.set(err.error?.message || 'Registration failed.');
+      throw err;
+    } finally {
+      this.setLoading(false);
+    }
+  }
+
   logout() {
     localStorage.removeItem('hp_token');
     this._token.set(null);
@@ -77,9 +99,8 @@ export class AuthStore {
     this.router.navigate(['/']);
   }
 
-  // --- Helper ---
   private setLoading(val: boolean) {
     this._loading.set(val);
-    if (val) this._error.set(null); // Clear errors when a new attempt starts
+    if (val) this._error.set(null);
   }
 }

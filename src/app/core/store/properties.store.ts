@@ -2,6 +2,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { Property } from '../../data/models/property.model';
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesStore {
@@ -13,8 +14,9 @@ export class PropertiesStore {
   private _searchList = signal<any[]>([]);   // Only holds AI search results
   private _loading = signal(false);
   private _isTyping = signal(false);
-  private _fullAiSummary = ''; 
-  private _displayedAiSummary = signal(''); 
+  private _fullAiSummary = '';
+  private _displayedAiSummary = signal('');
+  private _selectedProperty = signal<Property | null>(null); // State for Details Page
 
   // --- Selectors ---
   readonly featuredProperties = computed(() => this._featuredList());
@@ -22,6 +24,27 @@ export class PropertiesStore {
   readonly isLoading = computed(() => this._loading());
   readonly isTyping = computed(() => this._isTyping());
   readonly displayedAiSummary = computed(() => this._displayedAiSummary());
+  readonly selectedProperty = computed(() => this._selectedProperty());
+
+
+
+  /**
+   * Fetch a single property for the Details Page
+   */
+  async fetchPropertyById(id: string) {
+    this._loading.set(true);
+    try {
+      const data = await firstValueFrom(
+        this.http.get<Property>(`${this.API_URL}/${id}`)
+      );
+      this._selectedProperty.set(data);
+    } catch (error) {
+      this._selectedProperty.set(null);
+      throw error;
+    } finally {
+      this._loading.set(false);
+    }
+  }
 
   async fetchFeatured(limit: number = 12) {
     this._loading.set(true);
@@ -37,8 +60,8 @@ export class PropertiesStore {
   async search(query: string) {
     if (!query.trim()) return;
     this._loading.set(true);
-    this._displayedAiSummary.set(''); 
-    this._isTyping.set(true); 
+    this._displayedAiSummary.set('');
+    this._isTyping.set(true);
 
     try {
       const params = new HttpParams().set('chatPrompt', query);
@@ -47,7 +70,7 @@ export class PropertiesStore {
       this._searchList.set(res.data || []); // Updates ONLY the search list
       this._fullAiSummary = res.padi_summary || '';
       this._loading.set(false);
-      this.typeEffect(); 
+      this.typeEffect();
     } catch (error) {
       this._loading.set(false);
       this._isTyping.set(false);
@@ -65,5 +88,9 @@ export class PropertiesStore {
         clearInterval(interval);
       }
     }, 25);
+  }
+
+  clearSelected() {
+    this._selectedProperty.set(null);
   }
 }

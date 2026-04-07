@@ -1,25 +1,5 @@
 <div class="min-h-screen transition-colors duration-500 bg-transparent">
-  <nav class="fixed top-0 w-full z-50 px-3 md:px-6 py-4">
-    <div class="max-w-7xl mx-auto glass-card rounded-2xl px-4 md:px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-8">
-        <span class="text-xl md:text-2xl font-black gradient-text cursor-pointer">House Padi</span>
-        <div class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
-          <a href="#" class="hover:text-brand-primary transition-colors">Buy</a>
-          <a href="#" class="hover:text-brand-primary transition-colors">Rent</a>
-          <a href="#" class="hover:text-brand-primary transition-colors">Shortlet</a>
-        </div>
-      </div>
-      <div class="flex items-center gap-2 md:gap-4">
-        <button (click)="theme.toggle()" class="p-2 glass-card rounded-xl border-none cursor-pointer">
-          {{ theme.isDark() ? '☀️' : '🌙' }}
-        </button>
-        <button routerLink="/auth/login"
-          class="bg-brand-primary text-white px-4 md:px-6 py-2 rounded-xl font-bold text-xs md:text-sm">
-          Sign In
-        </button>
-      </div>
-    </div>
-  </nav>
+  <app-nav></app-nav>
 
   <section class="relative pt-32 md:pt-44 pb-12 px-6 overflow-hidden">
     <div class="hero-glow"></div>
@@ -110,7 +90,7 @@
           <h3 class="text-xl md:text-2xl font-black mb-4 truncate">{{ item.title }}</h3>
           <div class="flex items-center justify-between">
             <p class="text-2xl md:text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
-            <button
+            <button [routerLink]="['/properties', item.id]"
               class="bg-slate-900 dark:bg-white text-white dark:text-black w-12 h-12 rounded-xl flex items-center justify-center">→</button>
           </div>
         </div>
@@ -145,7 +125,7 @@
           </div>
           <div class="flex items-center justify-between">
             <p class="text-2xl md:text-3xl font-black text-brand-primary">₦{{ item.price | number }}</p>
-            <button
+            <button [routerLink]="['/properties', item.id]"
               class="bg-slate-900 dark:bg-white text-white dark:text-black w-12 h-12 rounded-xl flex items-center justify-center">→</button>
           </div>
         </div>
