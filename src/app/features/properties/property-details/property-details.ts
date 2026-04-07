@@ -5,11 +5,13 @@ import { AuthStore } from '../../../core/store/auth.store';
 import { RentingStore } from '../../../core/store/renting.store';
 import { PropertiesStore } from '../../../core/store/properties.store';
 import { Nav } from '../../../shared/components/nav/nav';
+import { FormsModule } from '@angular/forms';
+import { ToastStore } from '../../../core/store/toast.store';
 
 @Component({
   selector: 'app-property-details',
   standalone: true, // Assuming standalone based on imports
-  imports: [CommonModule, DecimalPipe, CurrencyPipe, Nav],
+  imports: [CommonModule, CurrencyPipe, Nav, FormsModule],
   templateUrl: './property-details.html',
   styleUrl: './property-details.css',
 })
@@ -17,15 +19,23 @@ export class PropertyDetails implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router); // Added missing injection
   private location = inject(Location);
+  toast = inject(ToastStore); // Add this line ✅
+  
 
   propertiesStore = inject(PropertiesStore);
   renting = inject(RentingStore);
   auth = inject(AuthStore);
 
+  selectedTourDate = signal<string>('');
+  minDate: string = '';
+
   activeImageIndex = signal(0);
   flowState = signal<'idle' | 'applying' | 'waiting_approval' | 'viewing_lease' | 'paying' | 'success'>('idle');
 
   ngOnInit() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.minDate = tomorrow.toISOString().split('T')[0];
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -44,29 +54,28 @@ export class PropertyDetails implements OnInit, OnDestroy {
 
   async handleAction() {
     const prop = this.propertiesStore.selectedProperty();
-    if (!prop) return;
+    const tourDate = this.selectedTourDate();
 
-    // Fixed: used this.auth.isAuthenticated() to match your inject
+    if (!prop || !tourDate) return;
+
     if (!this.auth.isAuthenticated()) {
-      this.router.navigate(['/auth/login'], { 
-        queryParams: { returnUrl: this.router.url } 
-      });
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
 
     try {
       this.flowState.set('applying');
-      // Fixed: used this.renting to match your inject
-      const app = await this.renting.applyForProperty(prop.id);
+      // Pass the selected tour date to the store
+      const app = await this.renting.applyForProperty(prop.id, tourDate);
 
       if (app.status === 'approved') {
+        this.toast.show('Interest logged! We will notify the owner.', 'success');
         await this.renting.initiateLease(app.id, this.auth.user()!.id);
         this.flowState.set('viewing_lease');
       } else {
         this.flowState.set('waiting_approval');
       }
     } catch (err) {
-      console.error('Application error:', err);
       this.flowState.set('idle');
     }
   }

@@ -14,12 +14,12 @@ export class RentingStore {
     currentLease = signal<Lease | null>(null);
     loading = signal(false);
 
-    async applyForProperty(propertyId: string): Promise<Application> {
+    async applyForProperty(propertyId: string, tourDate?: string) {
         this.loading.set(true);
         try {
-            const dto: InterestDto = { propertyId };
+            const payload = { propertyId, preferredTourDate: tourDate };
             const res = await firstValueFrom(
-                this.http.post<Application>(`${this.API_URL}/interest`, dto)
+                this.http.post<any>(`${this.API_URL}/interest`, payload)
             );
             this.currentApplication.set(res);
             return res;

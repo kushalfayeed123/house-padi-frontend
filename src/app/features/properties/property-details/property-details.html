@@ -1,97 +1,115 @@
 <div class="min-h-screen pt-28 pb-20 px-4 md:px-10 bg-slate-50 dark:bg-[#0a0a0a]">
-  <app-nav></app-nav>
+    <app-nav></app-nav>
 
-  <div class="max-w-7xl mx-auto mb-8">
-    <button (click)="goBack()" 
-      class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-primary transition-colors">
-      <span class="text-lg">←</span> Back to Search
-    </button>
-  </div>
+    <div class="max-w-7xl mx-auto mb-8">
+        <button (click)="goBack()"
+            class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-primary transition-colors">
+            <span class="text-lg">←</span> Back to Search
+        </button>
+    </div>
 
-  @if (propertiesStore.isLoading()) {
+    @if (propertiesStore.isLoading()) {
     <div class="max-w-7xl mx-auto flex flex-col items-center justify-center py-40">
-      <div class="w-12 h-12 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin"></div>
-      <p class="mt-4 font-black text-slate-400 uppercase text-[10px] tracking-widest animate-pulse">Fetching Padi Details...</p>
+        <div class="w-12 h-12 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin"></div>
+        <p class="mt-4 font-black text-slate-400 uppercase text-[10px] tracking-widest animate-pulse">Fetching Padi
+            Details...</p>
     </div>
-  } 
-  
-  @else if (propertiesStore.selectedProperty(); as prop) {
+    }
+
+    @else if (propertiesStore.selectedProperty(); as prop) {
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10 animate-in fade-in duration-500">
-      
-      <div class="lg:col-span-2 space-y-8">
-        <div class="relative group">
-          <div class="glass-card p-2 rounded-[3rem] overflow-hidden aspect-16/10 shadow-2xl">
-            <img [src]="prop.images?.[activeImageIndex()]"
-                 class="w-full h-full object-cover rounded-[2.5rem]">
-          </div>
 
-          <div class="absolute bottom-8 left-8 flex gap-3">
-            <button class="px-6 py-3 glass-card bg-brand-primary/20 backdrop-blur-xl border-white/20 text-white font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-brand-primary/40 transition-all">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-              </span>
-              3D Virtual Tour
-            </button>
-          </div>
-        </div>
+        <div class="lg:col-span-2 space-y-8">
+            <div class="relative group">
+                <div class="glass-card p-2 rounded-[3rem] overflow-hidden aspect-16/10 shadow-2xl">
+                    <img [src]="prop.images?.[activeImageIndex()]" class="w-full h-full object-cover rounded-[2.5rem]">
+                </div>
 
-        <div class="glass-card bg-linear-to-br from-brand-primary/10 to-transparent border-brand-primary/20 p-8 rounded-[2.5rem] relative overflow-hidden">
-          <div class="relative z-10">
-            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary mb-4">Padi's Smart Review</h4>
-            <p class="text-xl md:text-2xl font-medium leading-relaxed italic text-slate-800 dark:text-slate-200">
-              "{{ prop.aiSummary }}"
-            </p>
-          </div>
-        </div>
-
-        <div class="px-2 space-y-6">
-          <div>
-            <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">{{ prop.title }}</h1>
-            <div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 font-bold">
-              <span class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 dark:bg-white/5">📍</span>
-              {{ prop.location }} • {{ prop.addressFull }}
-            </div>
-          </div>
-
-          <div class="prose dark:prose-invert max-w-none text-lg leading-relaxed opacity-80" [innerHTML]="prop.description">
-          </div>
-        </div>
-      </div>
-
-      <div class="relative">
-        <div class="sticky top-28 space-y-6">
-          <div class="glass-card p-10 rounded-[3rem] shadow-2xl border-white/10">
-            <p class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2">Annual Rent</p>
-            <h2 class="text-5xl font-black text-brand-primary mb-8 tracking-tighter">
-              {{ prop.price | currency:'NGN':'symbol-narrow':'1.0-0' }} 
-            </h2>
-
-            <div class="grid grid-cols-2 gap-4 mb-10">
-              <div class="p-5 bg-slate-100 dark:bg-white/5 rounded-3xl border border-transparent hover:border-brand-primary/20 transition-all">
-                <p class="text-[9px] uppercase font-black text-slate-400 mb-1">Bedrooms</p>
-                <p class="font-black text-xl">{{ prop.features?.bedrooms || 0 }}</p>
-              </div>
-              <div class="p-5 bg-slate-100 dark:bg-white/5 rounded-3xl border border-transparent hover:border-brand-primary/20 transition-all">
-                <p class="text-[9px] uppercase font-black text-slate-400 mb-1">Bathrooms</p>
-                <p class="font-black text-xl">{{ prop.features?.bathrooms || 0 }}</p>
-              </div>
+                <div class="absolute bottom-8 left-8 flex gap-3">
+                    <button
+                        class="px-6 py-3 glass-card bg-brand-primary/20 backdrop-blur-xl border-white/20 text-white font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-brand-primary/40 transition-all">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        3D Virtual Tour
+                    </button>
+                </div>
             </div>
 
-            <button (click)="handleAction()" [disabled]="flowState() !== 'idle'"
-              class="w-full py-5 bg-brand-primary text-white font-black rounded-3xl hover:scale-[1.03] active:scale-95 transition-all shadow-xl shadow-brand-primary/30 disabled:opacity-50">
-              {{ flowState() === 'idle' ? 'Rent This Home' : 'Processing...' }}
-            </button>
-          </div>
+            <div
+                class="glass-card bg-linear-to-br from-brand-primary/10 to-transparent border-brand-primary/20 p-8 rounded-[2.5rem] relative overflow-hidden">
+                <div class="relative z-10">
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary mb-4">Padi's Smart
+                        Review</h4>
+                    <p
+                        class="text-xl md:text-2xl font-medium leading-relaxed italic text-slate-800 dark:text-slate-200">
+                        "{{ prop.aiSummary }}"
+                    </p>
+                </div>
+            </div>
+
+            <div class="px-2 space-y-6">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-black mb-4 tracking-tight">{{ prop.title }}</h1>
+                    <div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 font-bold">
+                        <span
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 dark:bg-white/5">📍</span>
+                        {{ prop.location }} • {{ prop.addressFull }}
+                    </div>
+                </div>
+
+                <div class="prose dark:prose-invert max-w-none text-lg leading-relaxed opacity-80"
+                    [innerHTML]="prop.description">
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div class="relative">
+            <div class="sticky top-28 space-y-6">
+                <div class="glass-card p-10 rounded-[3rem] shadow-2xl border-white/10">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2">Annual Rent</p>
+                    <h2 class="text-5xl font-black text-brand-primary mb-8 tracking-tighter">
+                        {{ prop.price | currency:'NGN':'symbol-narrow':'1.0-0' }}
+                    </h2>
+
+                    <div class="grid grid-cols-2 gap-4 mb-10">
+                        <div
+                            class="p-5 bg-slate-100 dark:bg-white/5 rounded-3xl border border-transparent hover:border-brand-primary/20 transition-all">
+                            <p class="text-[9px] uppercase font-black text-slate-400 mb-1">Bedrooms</p>
+                            <p class="font-black text-xl">{{ prop.features?.bedrooms || 0 }}</p>
+                        </div>
+                        <div
+                            class="p-5 bg-slate-100 dark:bg-white/5 rounded-3xl border border-transparent hover:border-brand-primary/20 transition-all">
+                            <p class="text-[9px] uppercase font-black text-slate-400 mb-1">Bathrooms</p>
+                            <p class="font-black text-xl">{{ prop.features?.bathrooms || 0 }}</p>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-[9px] font-black uppercase text-slate-400 tracking-widest mb-2">
+                            Schedule Physical Tour
+                        </label>
+                        <div class="relative">
+                            <input type="date" [(ngModel)]="selectedTourDate" [min]="minDate"
+                                class="w-full p-4 bg-slate-100 dark:bg-white/5 rounded-2xl border border-transparent focus:border-brand-primary/40 outline-none font-bold text-sm transition-all" />
+                        </div>
+                    </div>
+
+                    <button (click)="handleAction()" [disabled]="flowState() !== 'idle' || !selectedTourDate"
+                        class="w-full py-5 bg-brand-primary text-white font-black rounded-3xl hover:scale-[1.03] active:scale-95 transition-all shadow-xl shadow-brand-primary/30 disabled:opacity-50 disabled:grayscale">
+                        {{ flowState() === 'idle' ? 'Book Tour & Apply' : 'Processing...' }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  }
+    }
 
-  @else {
+    @else {
     <div class="max-w-7xl mx-auto text-center py-40">
-      <h2 class="text-2xl font-black mb-4">Property not found</h2>
-      <button routerLink="/" class="bg-brand-primary text-white px-8 py-3 rounded-xl font-bold">Back to Home</button>
+        <h2 class="text-2xl font-black mb-4">Property not found</h2>
+        <button routerLink="/" class="bg-brand-primary text-white px-8 py-3 rounded-xl font-bold">Back to Home</button>
     </div>
-  }
+    }
 </div>

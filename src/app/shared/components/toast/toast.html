@@ -1,0 +1,45 @@
+@if (store.isVisible()) {
+<div
+    class="fixed top-12 left-9/12 -translate-x-1/2 z-9999 w-full max-w-sm px-4 animate-in slide-in-from-top-8 duration-500">
+    <div class="relative group">
+        <div class="glass-card flex items-center gap-4 p-5 rounded-4xl border border-white/30 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] backdrop-blur-2xl transition-all"
+            [ngClass]="{
+                 'bg-white/60 dark:bg-slate-900/60': store.type() === 'info',
+                 'bg-emerald-500/20 border-emerald-500/30': store.type() === 'success',
+                 'bg-red-500/20 border-red-500/30': store.type() === 'error'
+               }">
+
+            <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" [ngClass]="{
+                   'bg-emerald-500 text-white': store.type() === 'success',
+                   'bg-red-500 text-white': store.type() === 'error',
+                   'bg-brand-primary text-white': store.type() === 'info'
+                 }">
+                @if (store.type() === 'success') { <span>✓</span> }
+                @else if (store.type() === 'error') { <span>!</span> }
+                @else { <span>i</span> }
+            </div>
+
+            <div class="flex-1">
+                <p class="text-xs font-black uppercase tracking-widest opacity-50 mb-0.5">
+                    {{ store.type() }}
+                </p>
+                <p class="text-sm font-bold text-slate-800 dark:text-white leading-tight">
+                    {{ store.message() }}
+                </p>
+            </div>
+
+            <button (click)="store.hide()"
+                class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors">
+                <span class="text-lg opacity-40">✕</span>
+            </button>
+        </div>
+
+        <div class="absolute -inset-1 blur-2xl opacity-20 -z-10 rounded-4xl" [ngClass]="{
+                 'bg-emerald-500': store.type() === 'success',
+                 'bg-red-500': store.type() === 'error',
+                 'bg-brand-primary': store.type() === 'info'
+               }">
+        </div>
+    </div>
+</div>
+}
