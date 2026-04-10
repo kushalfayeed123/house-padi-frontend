@@ -73,6 +73,11 @@ export class PropertyDetails implements OnInit, OnDestroy {
     return prop?.status === 'rented';
   });
 
+  public applicationCount = computed(() => {
+    const prop = this.propertiesStore.selectedProperty();
+    return prop?.applications?.length || 0;
+  });
+
 
   ngOnInit() {
     const tomorrow = new Date();
@@ -149,14 +154,26 @@ export class PropertyDetails implements OnInit, OnDestroy {
 
   async handleAction() {
     const prop = this.propertiesStore.selectedProperty();
-    const tourDate = this.selectedTourDate();
+    let tourDate = this.selectedTourDate();
 
     if (!prop) return;
-    const currentDate = new Date();
+
+    // Fallback to current date
+    if (!tourDate) {
+      tourDate = new Date().toISOString().split('T')[0];
+    }
+
+    // PREVENT REDUNDANT SUBMISSION: Check if user already has an application
+    // This handles the "Login Route" scenario where they might try to apply again
+    if (this.auth.isAuthenticated() && this.currentUserApplication()) {
+      this.toast.show('You have already applied for this property.', 'info');
+      this.calculateInitialFlowState(); // Force UI to 'waiting_approval' or 'viewing_lease'
+      return;
+    }
 
     if (!this.auth.isAuthenticated()) {
-      this.toast.show('Authentication required to book a tour. Please sign in.', 'info');
-      sessionStorage.setItem('pending_tour_date', tourDate || currentDate.toDateString());
+      this.toast.show('Authentication required to book a tour.', 'info');
+      sessionStorage.setItem('pending_tour_date', tourDate);
       setTimeout(() => {
         this.router.navigate(['/auth/login'], {
           queryParams: { returnUrl: this.router.url }

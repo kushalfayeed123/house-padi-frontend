@@ -147,6 +147,24 @@
                         </div>
                     </div>
 
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="flex -space-x-2">
+                          
+                            <div
+                                class="w-5 h-5 rounded-full border-2 border-white dark:border-zinc-800 bg-slate-300 dark:bg-zinc-600 flex items-center justify-center">
+                                <span class="text-[6px]">👤</span>
+                            </div>
+                        </div>
+                        <p class="text-[9px] font-black uppercase tracking-widest text-brand-primary">
+                            {{ applicationCount() }} {{ applicationCount() === 1 ? 'Application' : 'Applications' }}
+                        </p>
+                    </div>
+
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Rent Price</p>
+                    <h2 class="text-5xl font-black text-brand-primary mb-8 tracking-tighter">
+                        {{ prop.price | currency: ( 'NGN') :'symbol-narrow':'1.0-0' }}
+                    </h2>
+
                     @if (isRented()) {
                     <div class="p-8 bg-slate-900 dark:bg-white rounded-[2.5rem] text-center shadow-xl">
                         <p class="font-black uppercase text-[12px] text-white dark:text-black tracking-[0.2em]">Property
