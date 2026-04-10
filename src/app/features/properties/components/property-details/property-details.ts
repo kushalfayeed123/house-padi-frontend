@@ -96,36 +96,30 @@ export class PropertyDetails implements OnInit, OnDestroy {
     const prop = this.propertiesStore.selectedProperty();
     const user = this.auth.user();
 
-    if (!prop) {
-      this.flowState.set('idle');
-      return;
-    }
+    if (!prop) return;
 
     const applications = prop.applications || [];
-    // Check if any application is approved
-    const approvedApp = applications.find(a => a.status === 'approved');
+    const myApp = applications.find(a => a.renter_id === user?.id);
 
-    if (approvedApp) {
-      // If there is an approved app, only that specific user can see the lease
-      if (user && approvedApp.renter_id === user.id) {
-        this.flowState.set('viewing_lease');
-      } else {
-        // For everyone else (or guests), the property is locked/read-only
-        this.flowState.set('unavailable');
-      }
+    // If approved, show lease
+    if (myApp?.status === 'approved') {
+      this.flowState.set('viewing_lease');
       return;
     }
 
-    // If no one is approved, check if current user has a pending application
-    if (user) {
-      const myApp = applications.find(a => a.renter_id === user.id);
-      if (myApp && myApp.status === 'submitted') {
-        this.flowState.set('waiting_approval');
-        return;
-      }
+    // If already rented
+    if (prop.status === 'rented') {
+      this.flowState.set('unavailable');
+      return;
     }
 
-    this.flowState.set('idle');
+    // ONLY show the 'waiting_approval' modal if we aren't already in a session 
+    // where the user chose to "Stay on page"
+    if (myApp?.status === 'submitted' && this.flowState() !== 'idle') {
+      this.flowState.set('waiting_approval');
+    } else {
+      this.flowState.set('idle');
+    }
   }
 
   private checkAndAutoApply() {
@@ -209,6 +203,28 @@ export class PropertyDetails implements OnInit, OnDestroy {
     if (confirm) {
       this.toast.show('Rejection endpoint not implemented yet. Reverting UI for now.', 'info');
       this.flowState.set('idle');
+    }
+  }
+
+  async refreshAndStay() {
+    const prop = this.propertiesStore.selectedProperty();
+    if (!prop) return;
+
+    // 1. Show a quick loading indicator
+    this.flowState.set('applying');
+
+    try {
+      // 2. Fetch fresh data from the server
+      await this.propertiesStore.fetchPropertyById(prop.id);
+
+      // 3. Force the state to 'idle'
+      // This closes the modal even if the application is still 'submitted'
+      this.flowState.set('idle');
+
+      this.toast.show('Dashboard updated', 'success');
+    } catch (err) {
+      this.flowState.set('idle');
+      this.toast.show('Could not refresh data', 'error');
     }
   }
 }
