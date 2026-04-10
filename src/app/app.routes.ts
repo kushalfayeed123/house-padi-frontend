@@ -8,6 +8,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/home/home').then(m => m.Home)
   },
   {
+    path: 'dashboard',
+    loadComponent: () => import('./features/properties/components/renter-dashboard/renter-dashboard').then(m => m.RenterDashboard)
+  },
+  {
     path: 'auth',
     children: [
       {
@@ -27,8 +31,9 @@ export const routes: Routes = [
     children: [
       {
         path: ':id',
-        loadComponent: () => import('./features/properties/property-details/property-details').then(m => m.PropertyDetails)
-      }
+        loadComponent: () => import('./features/properties/components/property-details/property-details').then(m => m.PropertyDetails)
+      },
+
       // You can add your 'discover' or 'list' route here later
     ]
   },

@@ -21,6 +21,17 @@ export interface Property {
   };
   status: 'draft' | 'available' | 'pending' | 'rented' | 'archived';
   createdAt: string;
+  applications: PropertyApplication[];
+}
+
+export interface PropertyApplication {
+  id: string;
+  userId: string;
+  status: 'pending' | 'approved' | 'declined' | 'submitted';
+  tourDate: string;
+  renter_id: string;
+  contract_url: string;
+  lease_id: string;
 }
 
 export interface AISearchResponse {

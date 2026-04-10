@@ -3,11 +3,12 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Property } from '../../data/models/property.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesStore {
   private http = inject(HttpClient);
-  private readonly API_URL = 'https://house-padi.onrender.com/api/v1/properties';
+  private readonly API_URL = `${environment.apiUrl}/properties`;
 
   // --- State ---
   private _featuredList = signal<any[]>([]); // Always holds featured items

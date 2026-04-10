@@ -23,7 +23,8 @@ export class Login {
 
   async onSubmit() {
     if (this.loginForm.valid) {
-      await this.authStore.login(this.loginForm.value);
+      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+      await this.authStore.login(this.loginForm.value, returnUrl);
     }
   }
 }

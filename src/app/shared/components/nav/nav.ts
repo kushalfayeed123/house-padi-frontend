@@ -1,12 +1,12 @@
 import { Component, computed, inject } from '@angular/core';
 import { ThemeService } from '../../../core/services/theme.service';
 import { AuthStore } from '../../../core/store/auth.store'; // Adjust path
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './nav.html',
   styleUrl: './nav.css',
 })

@@ -1,0 +1,159 @@
+<div class="min-h-screen pt-28 pb-20 px-4 md:px-10 bg-slate-50 dark:bg-[#0a0a0a]">
+  <app-nav></app-nav>
+
+  <div class="max-w-7xl mx-auto mb-8 flex justify-between items-center">
+    <button (click)="goBack()"
+      class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-brand-primary transition-colors">
+      <span class="text-lg">←</span> Back to Search
+    </button>
+
+    @if (isUserApproved() && !isRented()) {
+    <div class="px-4 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full animate-in slide-in-from-right-2">
+      <p class="text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        Approved: Review Your Lease
+      </p>
+    </div>
+    }
+  </div>
+
+  @if (propertiesStore.isLoading()) {
+  <div class="max-w-7xl mx-auto flex flex-col items-center justify-center py-40">
+    <div class="w-12 h-12 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin"></div>
+    <p class="mt-4 font-black text-slate-400 uppercase text-[10px] tracking-widest animate-pulse">Fetching Padi Details...</p>
+  </div>
+  } @else if (propertiesStore.selectedProperty(); as prop) {
+
+  @if (flowState() === 'success') {
+  <div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
+    <div class="glass-card max-w-md w-full p-10 rounded-[3rem] text-center shadow-2xl animate-in zoom-in">
+      <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+        <span class="text-white text-3xl font-black">✓</span>
+      </div>
+      <h2 class="text-3xl font-black mb-2">Congratulations!</h2>
+      <p class="text-slate-500 mb-8">Your digital lease for {{prop.title}} is now active.</p>
+      <button (click)="goToHome()" class="w-full py-4 bg-slate-900 text-white font-black rounded-2xl">Back to Home</button>
+    </div>
+  </div>
+  }
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+    <div class="lg:col-span-2 space-y-8">
+      <div class="relative">
+        <div class="glass-card p-2 rounded-[3rem] overflow-hidden aspect-16/10 shadow-2xl transition-all"
+          [class.ring-4]="isUserApproved() && !isRented()" 
+          [class.ring-emerald-500/30]="isUserApproved() && !isRented()">
+
+          @if (isUserApproved() && leaseUrl() && !isRented()) {
+          <div class="w-full h-full bg-slate-100 dark:bg-zinc-900 flex flex-col rounded-[2.5rem] overflow-hidden">
+            <div class="px-6 py-3 border-b border-black/5 flex justify-between items-center bg-white/40">
+              <span class="text-[9px] font-black uppercase tracking-widest opacity-60">Personalized Lease Document</span>
+              <a [href]="leaseUrl()" target="_blank" class="text-[9px] font-black hover:text-brand-primary">Expand ↗</a>
+            </div>
+            <iframe [src]="leaseUrl() | safeUrl" class="w-full grow border-none"></iframe>
+          </div>
+          } 
+          @else {
+          <div class="relative w-full h-full">
+            <img [src]="prop.images?.[activeImageIndex()]" class="w-full h-full object-cover rounded-[2.5rem]">
+            
+            @if (isRented() && isUserApproved() && leaseUrl()) {
+            <a [href]="leaseUrl()" target="_blank" 
+               class="absolute bottom-6 right-6 glass-card px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-white dark:hover:bg-slate-800 transition-all shadow-xl">
+               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+               Signed Lease
+            </a>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="px-2 space-y-6">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight dark:text-white">{{ prop.title }}</h1>
+        <div class="prose dark:prose-invert max-w-none text-lg opacity-80" [innerHTML]="prop.description"></div>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div class="sticky top-28 space-y-6">
+        <div class="glass-card p-10 rounded-[3rem] shadow-2xl" 
+             [class.border-emerald-500/40]="isUserApproved() && !isRented()"
+             [class.opacity-90]="isRented()">
+
+          <p class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Rent Price</p>
+          <h2 class="text-5xl font-black text-brand-primary mb-8 tracking-tighter">
+            {{ prop.price | currency: ( 'NGN') :'symbol-narrow':'1.0-0' }}
+          </h2>
+
+          <div class="grid grid-cols-2 gap-4 mb-10">
+            <div class="p-5 bg-slate-100 dark:bg-white/5 rounded-3xl">
+              <p class="text-[9px] uppercase font-black text-slate-400 mb-1">Bedrooms</p>
+              <p class="font-black text-xl dark:text-white">{{ prop.features.bedrooms }}</p>
+            </div>
+            <div class="p-5 bg-slate-100 dark:bg-white/5 rounded-3xl">
+              <p class="text-[9px] uppercase font-black text-slate-400 mb-1">Bathrooms</p>
+              <p class="font-black text-xl dark:text-white">{{ prop.features.bathrooms }}</p>
+            </div>
+          </div>
+
+          @if (isRented()) {
+            <div class="p-8 bg-slate-900 dark:bg-white rounded-[2.5rem] text-center shadow-xl">
+              <p class="font-black uppercase text-[12px] text-white dark:text-black tracking-[0.2em]">Property Rented</p>
+              @if (isUserApproved()) {
+                <p class="text-[9px] text-emerald-400 dark:text-emerald-600 font-black mt-2 uppercase tracking-tighter">Secured by You</p>
+              } @else {
+                <p class="text-[9px] text-slate-400 dark:text-slate-500 font-bold mt-2">Listing no longer available.</p>
+              }
+            </div>
+          } 
+          
+          @else if (isLockedByOthers()) {
+          <div class="p-8 bg-slate-100 dark:bg-white/5 rounded-[2.5rem] text-center border-dashed border-2 border-slate-200 dark:border-white/10">
+            <span class="text-4xl mb-4 block">🔒</span>
+            <p class="font-black uppercase text-[10px] text-slate-400 tracking-widest">Listing Locked</p>
+          </div>
+          } 
+
+          @else if (isUserApproved()) {
+            @if (flowState() === 'paying') {
+            <button disabled class="w-full py-5 bg-emerald-600/50 text-white font-black rounded-3xl flex items-center justify-center gap-3 cursor-not-allowed">
+              <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Finalizing...
+            </button>
+            } @else {
+            <button (click)="onConfirmAndPay()" class="w-full py-5 bg-emerald-500 text-white font-black rounded-3xl hover:scale-[1.03] shadow-xl shadow-emerald-500/30 transition-all">
+              Sign & Pay Now
+            </button>
+            <button (click)="onDeclineLease()" class="w-full mt-4 text-[10px] font-black uppercase text-red-500/60 hover:text-red-500">
+              Decline Agreement
+            </button>
+            }
+          } 
+
+          @else if (currentUserApplication()) {
+          <div class="p-6 bg-amber-500/10 border border-amber-500/20 rounded-3xl text-center">
+            <p class="text-xs font-black text-amber-600 uppercase tracking-widest mb-1">Application Sent</p>
+            <p class="text-sm font-bold opacity-70 dark:text-white/60">Awaiting owner review.</p>
+          </div>
+          } 
+
+          @else {
+          <div class="mb-6">
+            <label class="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Tour Date</label>
+            <input type="date" [(ngModel)]="selectedTourDate" [min]="minDate"
+              class="w-full p-4 bg-slate-100 dark:bg-white/5 rounded-2xl outline-none font-bold text-sm dark:text-white" />
+          </div>
+          <button (click)="handleAction()" [disabled]="!selectedTourDate"
+            class="w-full py-5 bg-brand-primary text-white font-black rounded-3xl hover:scale-[1.03] transition-all disabled:opacity-50 disabled:hover:scale-100">
+            Book & Apply
+          </button>
+          }
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

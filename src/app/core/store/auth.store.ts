@@ -4,20 +4,20 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { User } from '../../data/models/auth.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private readonly API_URL = 'https://house-padi.onrender.com/api/v1/auth';
-
+  private readonly API_URL = `${environment.apiUrl}/auth`;
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(localStorage.getItem('hp_token'));
   private _loading = signal(false);
   private _error = signal<string | null>(null);
   private _isReady = signal(false);
-    
-  
+
+
   readonly isReady = computed(() => this._isReady());
   readonly user = computed(() => this._user());
   readonly token = computed(() => this._token());
@@ -48,7 +48,7 @@ export class AuthStore {
     try {
       // We return this call so the initializer waits for the network
       const rawProfile = await firstValueFrom(
-        this.http.get<any>('https://house-padi.onrender.com/api/v1/profiles/me')
+        this.http.get<any>(`${environment.apiUrl}/profiles/me`)
       );
       this._user.set(this.mapUser(rawProfile));
       this._isReady.set(true);
@@ -57,7 +57,7 @@ export class AuthStore {
     }
   }
 
-  async login(dto: any) {
+  async login(dto: any, returnUrl: string = '/') {
     this.setLoading(true);
     try {
       const res = await firstValueFrom(
@@ -66,12 +66,10 @@ export class AuthStore {
 
       localStorage.setItem('hp_token', res.access_token);
       this._token.set(res.access_token);
+      this._user.set(this.mapUser(res.user));
 
-      // CRITICAL FIX: Map the user before setting the signal
-      const cleanUser = this.mapUser(res.user);
-      this._user.set(cleanUser);
-
-      this.router.navigate(['/']);
+      // Navigate to the returnUrl or home if not provided
+      this.router.navigateByUrl(returnUrl);
     } catch (err: any) {
       this._error.set(err.error?.message || 'Invalid email or password.');
     } finally {
