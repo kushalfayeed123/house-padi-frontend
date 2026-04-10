@@ -160,10 +160,7 @@
                         </p>
                     </div>
 
-                    <p class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Rent Price</p>
-                    <h2 class="text-5xl font-black text-brand-primary mb-8 tracking-tighter">
-                        {{ prop.price | currency: ( 'NGN') :'symbol-narrow':'1.0-0' }}
-                    </h2>
+                   
 
                     @if (isRented()) {
                     <div class="p-8 bg-slate-900 dark:bg-white rounded-[2.5rem] text-center shadow-xl">

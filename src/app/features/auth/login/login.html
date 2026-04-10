@@ -5,7 +5,7 @@
 
   <div class="flex items-center justify-center min-h-screen p-6">
     <div class="w-full max-w-md glass-card rounded-[2.5rem] p-8 md:p-12 animate-in">
-      
+
       <div class="text-center mb-10">
         <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
           Welcome <span class="gradient-text">Back</span>
@@ -14,16 +14,17 @@
       </div>
 
       @if (isRecentlyRegistered) {
-        <div class="mb-6 p-4 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs font-bold rounded-2xl animate-pulse text-center uppercase tracking-wider">
-          Registration successful! Please log in.
-        </div>
+      <div
+        class="mb-6 p-4 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs font-bold rounded-2xl animate-pulse text-center uppercase tracking-wider">
+        Registration successful! Please log in.
+      </div>
       }
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div class="space-y-2">
           <label class="block text-[10px] uppercase font-black text-brand-primary ml-1">Email Address</label>
           <div class="glass-card bg-white/50! dark:bg-white/5! border-none p-1 rounded-2xl">
-             <input formControlName="email" type="email" placeholder="padi@example.com"
+            <input formControlName="email" type="email" placeholder="padi@example.com"
               class="w-full bg-transparent outline-none px-4 py-3 font-medium text-slate-900 dark:text-white placeholder:text-slate-400">
           </div>
         </div>
@@ -31,7 +32,8 @@
         <div class="space-y-2">
           <div class="flex justify-between items-center px-1">
             <label class="text-[10px] uppercase font-black text-brand-primary">Password</label>
-            <a href="#" class="text-[10px] text-slate-400 font-bold hover:text-brand-primary transition-colors uppercase">Forgot?</a>
+            <a href="#"
+              class="text-[10px] text-slate-400 font-bold hover:text-brand-primary transition-colors uppercase">Forgot?</a>
           </div>
           <div class="glass-card bg-white/50! dark:bg-white/5! border-none p-1 rounded-2xl">
             <input formControlName="password" type="password" placeholder="••••••••"
@@ -40,9 +42,9 @@
         </div>
 
         @if (authStore.error()) {
-          <div class="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold rounded-xl text-center">
-            {{ authStore.error() }}
-          </div>
+        <div class="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold rounded-xl text-center">
+          {{ authStore.error() }}
+        </div>
         }
 
         <button type="submit" [disabled]="loginForm.invalid || authStore.isLoading()"
@@ -51,8 +53,9 @@
         </button>
 
         <p class="text-center text-slate-500 text-sm mt-8 font-medium">
-          New to House Padi? 
-          <a routerLink="/auth/register" class="text-brand-primary font-black hover:underline ml-1">Create Account</a>
+          New to House Padi?
+          <a [routerLink]="'/auth/register'" [queryParams]="{ returnUrl: returnUrl }" class=" text-brand-primary
+            font-black hover:underline ml-1">Create Account</a>
         </p>
       </form>
     </div>

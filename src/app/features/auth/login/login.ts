@@ -13,6 +13,7 @@ export class Login {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   public authStore = inject(AuthStore);
+  returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
   isRecentlyRegistered = this.route.snapshot.queryParams['registered'] === 'true';
 

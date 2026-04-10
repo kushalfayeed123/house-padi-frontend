@@ -3,7 +3,7 @@
 
   <div class="flex items-center justify-center min-h-screen p-6 pt-24">
     <div class="w-full max-w-lg glass-card rounded-[2.5rem] p-8 md:p-12 animate-in">
-      
+
       <div class="text-center mb-8">
         <div class="tech-badge mx-auto mb-4 scale-90">Secure Onboarding</div>
         <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -29,13 +29,15 @@
           <div class="space-y-2">
             <label class="text-[10px] font-black text-brand-primary uppercase ml-1">First Name</label>
             <div class="glass-card !bg-white/50 dark:!bg-white/5 border-none p-1 rounded-2xl">
-              <input formControlName="firstName" type="text" class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="Firstname">
+              <input formControlName="firstName" type="text"
+                class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="Firstname">
             </div>
           </div>
           <div class="space-y-2">
             <label class="text-[10px] font-black text-brand-primary uppercase ml-1">Last Name</label>
             <div class="glass-card !bg-white/50 dark:!bg-white/5 border-none p-1 rounded-2xl">
-              <input formControlName="lastName" type="text" class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="Lastname">
+              <input formControlName="lastName" type="text"
+                class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="Lastname">
             </div>
           </div>
         </div>
@@ -43,14 +45,16 @@
         <div class="space-y-2">
           <label class="text-[10px] font-black text-brand-primary uppercase ml-1">Email</label>
           <div class="glass-card bg-white/50! dark:bg-white/5! border-none p-1 rounded-2xl">
-            <input formControlName="email" type="email" class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="padi@example.com">
+            <input formControlName="email" type="email"
+              class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="padi@example.com">
           </div>
         </div>
 
         <div class="space-y-2">
           <label class="text-[10px] font-black text-brand-primary uppercase ml-1">Password</label>
           <div class="glass-card bg-white/50! dark:bg-white/5! border-none p-1 rounded-2xl">
-            <input formControlName="password" type="password" class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="••••••••">
+            <input formControlName="password" type="password"
+              class="w-full bg-transparent outline-none px-4 py-3 text-sm font-bold" placeholder="••••••••">
           </div>
         </div>
 
@@ -60,7 +64,10 @@
         </button>
 
         <p class="text-center text-slate-500 text-sm mt-6 font-medium">
-          Already a Padi? <a routerLink="/auth/login" class="text-brand-primary font-black hover:underline ml-1">Sign In</a>
+          Already a have an account? <a [routerLink]="['/auth/login']" [queryParams]="{ returnUrl: returnUrl }"
+            class="text-brand-primary font-bold">
+            Login here
+          </a>
         </p>
       </form>
     </div>

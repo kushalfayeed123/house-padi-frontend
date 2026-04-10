@@ -81,7 +81,6 @@ export class AuthStore {
     this.setLoading(true);
     try {
       await firstValueFrom(this.http.post(`${this.API_URL}/register`, dto));
-      this.router.navigate(['/auth/login'], { queryParams: { registered: 'true' } });
     } catch (err: any) {
       this._error.set(err.error?.message || 'Registration failed.');
       throw err;
