@@ -10,6 +10,7 @@ import { PropertyListingPayload } from '../../data/dtos/property-listing.dto';
 export class PropertiesStore {
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.apiUrl}/properties`;
+  private readonly NEWS_API_URL = `${environment.apiUrl}/news`;
 
   // --- State ---
   private _featuredList = signal<any[]>([]); // Always holds featured items
@@ -164,27 +165,25 @@ export class PropertiesStore {
   newsArticles = signal<any[]>([]);
 
   // Inside your PropertiesStore
+
+
   async fetchMarketNews() {
-    const apiKey = '7acf5c86c8a44d92921d44d233656420';
+    // Point this to your local NestJS server or production domain
+    const url = `${this.NEWS_API_URL}/housing`;
 
-
-    const smartQuery = encodeURIComponent('(Nigeria OR Lagos OR Abuja) AND (housing OR property OR "house prices" OR "rent prices" OR "estate security") -sports -football -election -politics');
-    const url = `https://newsapi.org/v2/everything?q=${smartQuery}&language=en&sortBy=relevancy&pageSize=10&apiKey=${apiKey}`;
     try {
       const res = await fetch(url);
-      const data = await res.json();
+      const articles = await res.json();
 
-      if (data.articles) {
-        // Final filter to ensure 'housing' or 'property' is actually in the title
-        const housingSpecific = data.articles.filter((a: any) => {
-          const title = a.title.toLowerCase();
-          return title.includes('house') || title.includes('propert') || title.includes('rent') || title.includes('estate') || title.includes('building');
-        });
+      const mapped = articles.map((a: any) => ({
+        ...a,
+        category: this.detectCategory(a.title),
+        sourceName: a.source.name
+      }));
 
-        this.newsArticles.set(housingSpecific.slice(0, 4));
-      }
+      this.newsArticles.set(mapped);
     } catch (e) {
-      console.error("News fetch failed", e);
+      console.error("Fetch failed", e);
     }
   }
 
