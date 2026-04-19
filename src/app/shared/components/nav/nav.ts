@@ -12,7 +12,16 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Nav {
   theme = inject(ThemeService);
-  auth = inject(AuthStore);
+   protected readonly auth = inject(AuthStore);
+
+  // Derived signal for the dashboard route
+  protected readonly dashboardLink = computed(() => {
+    const user = this.auth.user();
+    if (!user) return '/auth/login';
+
+    // Explicit role check matching your backend RolesGuard logic
+    return user.role === 'owner' ? '/owner' : '/renter';
+  });
 
   displayName = computed(() => {
     const user = this.auth.user();

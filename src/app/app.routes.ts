@@ -5,18 +5,41 @@ import { guestGuard } from './core/guards/guest.guard';
 export const routes: Routes = [
   {
     path: '',
+    title: 'House Padi | Find Your Next Home',
     loadComponent: () => import('./features/home/home').then(m => m.Home)
   },
   {
-    path: 'dashboard',
+    path: 'renter',
+    canActivate: [authGuard],
     loadComponent: () => import('./features/properties/components/renter-dashboard/renter-dashboard').then(m => m.RenterDashboard)
+  },
+  {
+    path: 'owner',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/owner/owner-dashboard/owner-dashboard').then(m => m.OwnerDashboard)
+      },
+      {
+        path: 'properties/new',
+        title: 'List New Property | House Padi',
+        loadComponent: () => import('./features/owner/add-property/add-property').then(m => m.AddProperty)
+      },
+      // ADD THIS ROUTE:
+      {
+        path: 'properties/edit/:id',
+        title: 'Edit Property | House Padi',
+        loadComponent: () => import('./features/owner/add-property/add-property').then(m => m.AddProperty)
+      }
+    ]
   },
   {
     path: 'auth',
     children: [
       {
         path: 'login',
-        canActivate: [guestGuard], // Prevents logged-in users from seeing login
+        canActivate: [guestGuard],
         loadComponent: () => import('./features/auth/login/login').then(m => m.Login)
       },
       {
@@ -32,30 +55,13 @@ export const routes: Routes = [
       {
         path: ':id',
         loadComponent: () => import('./features/properties/components/property-details/property-details').then(m => m.PropertyDetails)
-      },
-
-      // You can add your 'discover' or 'list' route here later
+      }
     ]
   },
   {
     path: 'profile',
-    canActivate: [authGuard], // Must be logged in
-    children: [
-      // {
-      //   path: 'kyc',
-      //   loadComponent: () => import('./features/profile/kyc-upload/kyc-upload.component').then(m => m.KycUploadComponent)
-      // },
-      // {
-      //   path: 'pending-verification',
-      //   loadComponent: () => import('./features/profile/kyc-pending/kyc-pending.component').then(m => m.KycPendingComponent)
-      // }
-    ]
+    canActivate: [authGuard],
+    children: []
   },
-  // {
-  //   path: 'discover',
-  //   loadComponent: () => import('./features/properties/property-list/property-list.component').then(m => m.PropertyListComponent)
-  // },
-  // Fallback
   { path: '**', redirectTo: '' }
-
 ];

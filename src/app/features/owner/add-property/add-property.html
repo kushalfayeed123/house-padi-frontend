@@ -1,0 +1,186 @@
+<app-nav></app-nav>
+
+<main class="min-h-screen pt-28 pb-20 px-4 md:px-8 bg-slate-50 dark:bg-[#050505]">
+    <div class="max-w-6xl mx-auto">
+
+        <nav class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <button type="button" (click)="goBack()"
+                class="flex items-center gap-2 text-slate-400 hover:text-brand-primary transition-all group">
+                <span
+                    class="material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span class="text-[10px] font-black uppercase tracking-widest">Back to Dashboard</span>
+            </button>
+
+            <div class="flex gap-4">
+                <div class="glass-card px-4 py-2 rounded-xl flex items-center gap-2 border-none">
+                    <span class="material-symbols-outlined text-sm"
+                        [class.text-emerald-500]="selectedFiles().length > 0 || existingImages().length > 0">
+                        {{ (selectedFiles().length > 0 || existingImages().length > 0) ? 'check_circle' : 'pending' }}
+                    </span>
+                    <span class="text-[10px] font-black uppercase tracking-tight dark:text-white">Images *</span>
+                </div>
+                <div class="glass-card px-4 py-2 rounded-xl flex items-center gap-2 border-none">
+                    <span class="material-symbols-outlined text-sm" [class.text-emerald-500]="propertyForm.valid">
+                        {{ propertyForm.valid ? 'check_circle' : 'pending' }}
+                    </span>
+                    <span class="text-[10px] font-black uppercase tracking-tight dark:text-white">Required Info *</span>
+                </div>
+            </div>
+        </nav>
+
+        <form [formGroup]="propertyForm" (ngSubmit)="submit()"
+            class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <div class="lg:col-span-8 space-y-8">
+                <header class="mb-2 text-slate-900 dark:text-white">
+                    <h1 class="text-4xl md:text-6xl font-black tracking-tighter">
+                        {{ isEditMode() ? 'Update' : 'List' }}
+                        <span class="text-brand-primary">Property</span>
+                    </h1>
+                    @if (isEditMode()) {
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">ID: {{ propertyId()
+                        }}</p>
+                    }
+                </header>
+
+                <section class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Visual Gallery
+                            <span class="text-rose-500">*</span></label>
+
+                        @if (isEditMode() && existingImages().length > 0) {
+                        <span
+                            class="text-[9px] font-bold px-2 py-1 bg-brand-primary/10 text-brand-primary rounded-md uppercase">
+                            {{ existingImages().length }} Saved Photos
+                        </span>
+                        }
+                    </div>
+
+                    @if (isEditMode() && existingImages().length > 0) {
+                    <div class="mb-6">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1 mb-3 block">
+                            Manage Current Photos
+                        </label>
+
+                        <div class="flex flex-wrap gap-4">
+                            @for (img of existingImages(); track img) {
+                            <div class="relative w-24 h-24 group">
+                                <div
+                                    class="w-full h-full rounded-2xl overflow-hidden border-2 border-white dark:border-white/5 shadow-md">
+                                    <img [src]="img"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+
+                                <button type="button" (click)="removeExistingImage(img)"
+                                    class="absolute -top-2 -right-2 w-7 h-7 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-rose-600 active:scale-90 transition-all z-10">
+                                    <span class="material-symbols-outlined text-sm font-bold">close</span>
+                                </button>
+
+                                <div
+                                    class="absolute inset-0 bg-black/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                    <section class="space-y-4">
+                        <label class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+                            {{ isEditMode() ? 'Add New Photos' : 'Visual Gallery' }}
+                        </label>
+                        <app-image-uploader (onFilesChanged)="handleFiles($event)"></app-image-uploader>
+                    </section>
+                    @if (isEditMode()) {
+                    <p class="text-[9px] text-slate-400 italic font-medium ml-1">Uploading new photos will add them to
+                        your existing gallery.</p>
+                    }
+                </section>
+
+                <section class="glass-card p-8 rounded-[2.5rem] border-none space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Title <span
+                                class="text-rose-500">*</span></label>
+                        <input formControlName="title" type="text" class="form-input-padi text-lg"
+                            placeholder="e.g. 3 Bedroom Flat at Little Rayfield">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Description
+                            (Optional)</label>
+                        <textarea formControlName="description" rows="4" class="form-input-padi resize-none"
+                            placeholder="Provide extra details about the property..."></textarea>
+                    </div>
+                </section>
+            </div>
+
+            <div class="lg:col-span-4 space-y-8 lg:sticky lg:top-28">
+
+                <section class="glass-card p-8 rounded-[2.5rem] border-none space-y-6">
+                    <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Rent & Terms</h3>
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Amount (₦) <span
+                                    class="text-rose-500">*</span></label>
+                            <input formControlName="price" type="number" class="form-input-padi" placeholder="0.00">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Lease (Months) <span
+                                    class="text-rose-500">*</span></label>
+                            <input formControlName="leaseDurationMonths" type="number" class="form-input-padi">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="glass-card p-8 rounded-[2.5rem] border-none space-y-6">
+                    <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Location & Specs</h3>
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Area/Location</label>
+                            <div class="relative group">
+                                <select formControlName="location"
+                                    class="form-input-padi bg-slate-100 dark:bg-white/5 appearance-none cursor-pointer">
+                                    @for (loc of locations(); track loc) {
+                                    <option [value]="loc" class="dark:bg-[#121212] dark:text-white">
+                                        {{ loc }}
+                                    </option>
+                                    }
+                                </select>
+                                <span
+                                    class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-brand-primary transition-colors">
+                                    expand_more
+                                </span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Full Address</label>
+                            <input formControlName="addressFull" type="text" class="form-input-padi"
+                                placeholder="No. 12 Rayfield Road...">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4" formGroupName="features">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Bedrooms</label>
+                                <input formControlName="bedrooms" type="number" class="form-input-padi">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Bathrooms</label>
+                                <input formControlName="bathrooms" type="number" class="form-input-padi">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <button type="submit" [disabled]="!canSubmit() || isSubmitting()"
+                    class="w-full py-6 bg-brand-primary text-white font-black rounded-[2rem] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 disabled:grayscale flex items-center justify-center gap-3">
+                    @if (isSubmitting()) {
+                    <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    {{ isEditMode() ? 'SAVING CHANGES...' : 'UPLOADING...' }}
+                    } @else {
+                    <span class="material-symbols-outlined">{{ isEditMode() ? 'save' : 'publish' }}</span>
+                    {{ isEditMode() ? 'SAVE CHANGES' : 'PUBLISH LISTING' }}
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</main>

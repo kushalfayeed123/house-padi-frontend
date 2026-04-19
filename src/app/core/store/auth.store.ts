@@ -3,7 +3,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { User } from '../../data/models/auth.model';
+import { KycStatus, User } from '../../data/models/auth.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -33,11 +33,13 @@ export class AuthStore {
       id: raw.id,
       email: raw.email,
       // Mapping snake_case metadata to our camelCase interface
-      firstName: raw.user_metadata?.first_name || raw.email.split('@')[0],
-      lastName: raw.user_metadata?.last_name || '',
+      firstName: raw.first_name || raw.email.split('@')[0],
+      lastName: raw.last_name || '',
       // Default to renter if metadata is missing
-      role: raw.user_metadata?.role || 'renter',
-      avatarUrl: raw.user_metadata?.avatar_url
+      role: raw.role || 'renter',
+      avatarUrl: raw.avatar_url,
+      kycStatus: raw.kycStatus,
+      createdAt: raw.createdAt
     };
   }
 
@@ -66,8 +68,7 @@ export class AuthStore {
 
       localStorage.setItem('hp_token', res.access_token);
       this._token.set(res.access_token);
-      this._user.set(this.mapUser(res.user));
-
+      this.init();
       // Navigate to the returnUrl or home if not provided
       this.router.navigateByUrl(returnUrl);
     } catch (err: any) {

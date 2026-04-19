@@ -1,0 +1,67 @@
+<div class="glass-card p-6 rounded-[2.5rem] border-none bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">
+  <div class="flex items-center justify-between mb-6 px-2">
+    <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">Your Portfolio</h3>
+    <span class="text-[10px] font-bold text-brand-primary bg-brand-primary/10 px-3 py-1 rounded-full">
+      {{ properties().length }} Units
+    </span>
+  </div>
+
+  <div class="space-y-4">
+    @for (prop of properties(); track prop.id) {
+      <div 
+        [routerLink]="['/properties', prop.id]"
+        class="flex items-center justify-between p-3 rounded-2xl hover:bg-white dark:hover:bg-white/10 transition-all group border border-transparent hover:border-slate-100 dark:hover:border-white/5 cursor-pointer shadow-sm hover:shadow-md"
+      >
+        
+        <div class="flex items-center gap-3 max-w-[60%]">
+          <div class="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-100 dark:border-white/5">
+            @if (prop.images && prop.images[0]) {
+              <img [src]="prop.images[0]" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" alt="Property">
+            } @else {
+              <div class="w-full h-full flex items-center justify-center text-slate-400">
+                <span class="material-symbols-outlined text-sm">image</span>
+              </div>
+            }
+          </div>
+
+          <div class="flex flex-col truncate">
+            <span class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-brand-primary transition-colors truncate">
+              {{ prop.title }}
+            </span>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter italic">
+              NGN {{ prop.price | number }} / yr
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1 md:gap-2">
+          <span [class]="getStatusClasses(prop.status)" class="hidden lg:block mr-2">
+            {{ prop.status }}
+          </span>
+          
+          <button 
+            (click)="$event.stopPropagation(); onEdit(prop)"
+            class="p-2 rounded-lg text-slate-400 hover:bg-brand-primary/10 hover:text-brand-primary transition-all active:scale-90"
+            title="Edit Listing"
+          >
+            <span class="material-symbols-outlined text-[18px]">edit_square</span>
+          </button>
+
+          <button 
+            (click)="$event.stopPropagation(); onDelete(prop.id)"
+            class="p-2 rounded-lg text-slate-400 hover:bg-rose-500/10 hover:text-rose-500 transition-all active:scale-90"
+            title="Delete Listing"
+          >
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <div class="py-10 text-center border-2 border-dashed border-slate-100 dark:border-white/5 rounded-[2rem]">
+        <p class="text-[10px] font-black text-slate-400 uppercase">No Properties Listed Yet</p>
+      </div>
+    }
+  </div>
+</div>
+
+

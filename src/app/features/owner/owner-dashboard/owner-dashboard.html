@@ -1,0 +1,71 @@
+<div class="min-h-screen pt-28 pb-12 px-4 md:px-8 bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-400">
+    <app-nav></app-nav>
+
+    <div class="max-w-7xl mx-auto space-y-10">
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div class="space-y-1">
+                <div class="tech-badge">
+                    <span class="pulse-dot"></span>
+                    Live Portfolio
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black dark:text-white tracking-tighter">
+                    Owner <span>Dashboard</span>
+                </h1>
+            </div>
+
+            <button routerLink="/owner/properties/new"
+                class="bg-brand-primary text-white px-8 py-3 rounded-2xl font-black text-sm tracking-tight shadow-lg shadow-brand-primary/20 transition-all active:scale-95 flex items-center gap-2 hover:brightness-110">
+                <span class="material-symbols-outlined text-[20px]">add_box</span>
+                List New Property
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <app-stats-card title="Escrow Balance" [value]="store.walletBalance() | currency:'NGN':'symbol-narrow'"
+                icon="payments" variant="primary">
+            </app-stats-card>
+
+            <app-stats-card title="Active Units" [value]="store.totalProperties()" icon="real_estate_agent"
+                variant="success">
+            </app-stats-card>
+
+            <app-stats-card title="Applications" [value]="store.pendingApplications()" icon="description"
+                variant="warning">
+            </app-stats-card>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <section class="lg:col-span-8 space-y-4">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">Recent Applications
+                </h3>
+
+                @if (store.loading()) {
+                <div class="glass-card p-12 rounded-[2rem] flex justify-center">
+                    <div class="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin">
+                    </div>
+                </div>
+                } @else {
+                <div class="glass-card rounded-[2rem] overflow-hidden">
+                    <app-application-list [applications]="store.applications()" (onAction)="handleAction($event)">
+                    </app-application-list>
+                </div>
+                }
+            </section>
+
+            <aside class="lg:col-span-4 space-y-4">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">Property Status</h3>
+                <app-property-sidebar [properties]="store.properties()" (onEditAction)="handleEditRequest($event)"
+                    (onDeleteAction)="handleDeleteRequest($event)">
+                </app-property-sidebar>
+            </aside>
+
+        </div>
+    </div>
+</div>
+
+
+<app-confirm-modal #deleteModal title="Delete Property"
+    message="Are you sure you want to remove this listing from House Padi? This will permanently delete all photos and data."
+    (onConfirm)="executeDelete()">
+</app-confirm-modal>

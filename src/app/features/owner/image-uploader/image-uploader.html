@@ -1,0 +1,41 @@
+<div class="space-y-4">
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    
+    @for (url of previews(); track $index) {
+      <div class="relative aspect-square rounded-3xl overflow-hidden group border border-slate-200 dark:border-white/10 shadow-sm">
+        <img [src]="url" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+          <button type="button" (click)="removeImage($index)" 
+            class="w-8 h-8 bg-rose-500 text-white rounded-xl flex items-center justify-center hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-sm">delete</span>
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (previews().length < 15) {
+      <div 
+        (click)="fileInput.click()"
+        [class.col-span-full]="previews().length === 0"
+        [class.py-12]="previews().length === 0"
+        [class.aspect-square]="previews().length > 0"
+        class="glass-card rounded-3xl border-dashed border-2 border-slate-200 dark:border-white/10 hover:border-brand-primary transition-all cursor-pointer flex flex-col items-center justify-center group"
+      >
+        <input type="file" #fileInput (change)="onFileSelected($event)" multiple accept="image/*" class="hidden">
+        
+        <div class="bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform"
+             [class.w-16]="previews().length === 0" [class.h-16]="previews().length === 0"
+             [class.w-10]="previews().length > 0" [class.h-10]="previews().length > 0">
+          <span class="material-symbols-outlined" [class.text-3xl]="previews().length === 0">add_a_photo</span>
+        </div>
+
+        @if (previews().length === 0) {
+          <h3 class="mt-4 font-black dark:text-white tracking-tighter">Upload Assets</h3>
+          <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">PNG, JPG up to 15 images</p>
+        } @else {
+          <span class="text-[10px] font-black text-brand-primary mt-2 uppercase tracking-tighter">Add More</span>
+        }
+      </div>
+    }
+  </div>
+</div>

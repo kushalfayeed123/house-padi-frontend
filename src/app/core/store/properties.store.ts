@@ -1,9 +1,10 @@
 // src/app/core/store/properties.store.ts
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { Property } from '../../data/models/property.model';
 import { environment } from '../../../environments/environment';
+import { PropertyListingPayload } from '../../data/dtos/property-listing.dto';
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesStore {
@@ -93,5 +94,69 @@ export class PropertiesStore {
 
   clearSelected() {
     this._selectedProperty.set(null);
+  }
+
+  createListing(dto: PropertyListingPayload, images: File[]): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('title', dto.title);
+    formData.append('price', dto.price.toString());
+    formData.append('location', dto.location);
+    formData.append('addressFull', dto.addressFull || 'N/A');
+    formData.append('description', dto.description || '');
+    formData.append('leaseDurationMonths', dto.leaseDurationMonths.toString());
+    formData.append('agreementContent', dto.agreementContent || 'Standard Agreement');
+
+    if (dto.lat) formData.append('lat', dto.lat.toString());
+    if (dto.lng) formData.append('lng', dto.lng.toString());
+
+    formData.append('features', JSON.stringify(dto.features));
+
+    // FIX: Change 'images' to 'files' so NestJS @UploadedFiles() sees them
+    images.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
+
+    return this.http.post(this.API_URL, formData);
+  }
+
+  // owner-properties.service.ts
+
+  // property.service.ts
+  updateProperty(id: string, dto: any, files: File[]): Observable<any> {
+    const formData = new FormData();
+
+    // 1. Append standard fields
+    Object.keys(dto).forEach(key => {
+      if (key !== 'images' && key !== 'features' && dto[key] !== undefined) {
+        formData.append(key, dto[key]);
+      }
+    });
+
+    // 2. Append Features (JSON stringify for JSONB fields)
+    if (dto.features) {
+      formData.append('features', JSON.stringify(dto.features));
+    }
+
+    // 3. Append Existing Images (The "Keep" list)
+    if (dto.images && dto.images.length > 0) {
+      dto.images.forEach((url: string) => {
+        formData.append('images', url); // NestJS will pick this up as an array
+      });
+    } else {
+      // If all existing images were removed, send an empty indicator if needed
+      // or simply don't append, and the DTO @Transform will handle the empty array
+    }
+
+    // 4. Append New Files
+    files.forEach(file => {
+      formData.append('files', file, file.name);
+    });
+
+    return this.http.patch(`${this.API_URL}/${id}`, formData);
+  }
+
+  deleteProperty(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 }
