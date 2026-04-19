@@ -80,7 +80,7 @@
     </a>
 
     @if (auth.user()) {
-    <a routerLink="/renter" routerLinkActive="text-brand-primary"
+    <a [routerLink]="dashboardLink()" routerLinkActive="text-brand-primary"
       class="flex flex-col items-center p-3 text-slate-400 transition-all active:scale-90">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
