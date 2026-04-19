@@ -5,7 +5,8 @@ export interface MyApplication {
   applied_at: string;
   lease_id: string | null;
   contract_url: string | null;
-  property: {
+  property_id: string;
+  property?: {
     id: string;
     title: string;
     price: string; // Note: price is a string in your JSON

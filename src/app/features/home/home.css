@@ -1,0 +1,22 @@
+/* home.css */
+
+/* Staggered entrance for results */
+.animate-in {
+  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ensure images cover correctly within glass cards */
+.glass-card img {
+  border-bottom: 0px;
+}
+
+/* Fix for Material Symbols if they appear as text */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
+/* Smooth Scrolling */
+:host {
+  display: block;
+  scroll-behavior: smooth;
+}

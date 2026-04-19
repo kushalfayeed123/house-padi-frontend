@@ -32,13 +32,50 @@ export class AddProperty implements OnInit {
   selectedFiles = signal<File[]>([]);
   uploadError = signal<string | null>(null);
 
-  locations = signal<string[]>(['Jos', 'Abuja', 'Lagos', 'Port Harcourt', 'Kano']);
-
+  locations = signal<string[]>([
+    'Abia',
+    'Adamawa',
+    'Akwa Ibom',
+    'Anambra',
+    'Bauchi',
+    'Bayelsa',
+    'Benue',
+    'Borno',
+    'Cross River',
+    'Delta',
+    'Ebonyi',
+    'Edo',
+    'Ekiti',
+    'Enugu',
+    'Federal Capital Territory (Abuja)',
+    'Gombe',
+    'Imo',
+    'Jigawa',
+    'Kaduna',
+    'Kano',
+    'Katsina',
+    'Kebbi',
+    'Kogi',
+    'Kwara',
+    'Lagos',
+    'Nasarawa',
+    'Niger',
+    'Ogun',
+    'Ondo',
+    'Osun',
+    'Oyo',
+    'Plateau',
+    'Rivers',
+    'Sokoto',
+    'Taraba',
+    'Yobe',
+    'Zamfara'
+  ]);
   propertyForm = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(5)]],
     price: [0, [Validators.required, Validators.min(1)]],
     leaseDurationMonths: [12, [Validators.required, Validators.min(1)]],
-    location: ['Jos', Validators.required],
+    location: ['', Validators.required],
     addressFull: ['', Validators.required],
     description: [''],
     features: this.fb.group({

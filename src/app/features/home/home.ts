@@ -1,4 +1,3 @@
-// src/app/pages/home/home.ts
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
@@ -21,18 +20,35 @@ export class Home implements OnInit {
   propStore = inject(PropertiesStore);
   router = inject(Router);
 
-  categories = ['Trending', 'Modern Apartments', 'Self-Contain', 'Shortlets', 'Office Space', 'Luxury Duplex'];
-
-  // Single property for the AI input
   chatPrompt = '';
 
+  categories = [
+    { name: 'Trending', icon: 'bolt' },
+    { name: 'Apartments', icon: 'apartment' },
+    { name: 'Self-Contain', icon: 'grid_view' },
+    { name: 'Shortlets', icon: 'bedtime' },
+    { name: 'Office Space', icon: 'work' },
+    { name: 'Luxury', icon: 'auto_awesome' }
+  ];
+
+  trendingSearches = ['2 Bedroom in Jos', 'Self-contain in Lagos', 'Serviced Apartment', 'Offices in Abuja'];
+
   ngOnInit() {
-    // Initial fetch for featured properties
     this.propStore.fetchFeatured(12);
+    this.propStore.fetchMarketNews(); // Add this line
   }
 
   onSearch() {
-    // Component simply triggers the store's search action
+    if (!this.chatPrompt.trim()) return;
     this.propStore.search(this.chatPrompt);
+    // Scroll to results if needed
+    setTimeout(() => {
+      document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }
+
+  setPrompt(prompt: string) {
+    this.chatPrompt = prompt;
+    this.onSearch();
   }
 }

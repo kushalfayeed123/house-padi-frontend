@@ -159,4 +159,41 @@ export class PropertiesStore {
   deleteProperty(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
+
+  // Inside your PropertiesStore or a new NewsStore
+  newsArticles = signal<any[]>([]);
+
+  // Inside your PropertiesStore
+  async fetchMarketNews() {
+    const apiKey = '7acf5c86c8a44d92921d44d233656420';
+
+
+    const smartQuery = encodeURIComponent('(Nigeria OR Lagos OR Abuja) AND (housing OR property OR "house prices" OR "rent prices" OR "estate security") -sports -football -election -politics');
+    const url = `https://newsapi.org/v2/everything?q=${smartQuery}&language=en&sortBy=relevancy&pageSize=10&apiKey=${apiKey}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.articles) {
+        // Final filter to ensure 'housing' or 'property' is actually in the title
+        const housingSpecific = data.articles.filter((a: any) => {
+          const title = a.title.toLowerCase();
+          return title.includes('house') || title.includes('propert') || title.includes('rent') || title.includes('estate') || title.includes('building');
+        });
+
+        this.newsArticles.set(housingSpecific.slice(0, 4));
+      }
+    } catch (e) {
+      console.error("News fetch failed", e);
+    }
+  }
+
+  // Simple logic to give that "AI Tagged" feel to the home seeker
+  detectCategory(text: string): string {
+    const t = text.toLowerCase();
+    if (t.includes('price') || t.includes('rent') || t.includes('cost')) return 'Pricing';
+    if (t.includes('security') || t.includes('safe') || t.includes('police')) return 'Security';
+    if (t.includes('new') || t.includes('launch') || t.includes('future')) return 'Development';
+    return 'Market Trend';
+  }
 }

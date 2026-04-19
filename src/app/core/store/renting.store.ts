@@ -16,6 +16,7 @@ export class RentingStore {
     currentApplication = signal<Application | null>(null);
     currentLease = signal<Lease | null>(null);
     loading = signal(false);
+    leases = signal<Lease[]>([]);
 
     /**
      * Fetch all applications for the current user
@@ -27,7 +28,8 @@ export class RentingStore {
             const res = await firstValueFrom(
                 this.http.get<MyApplication[]>(`${this.API_URL}/my-applications`)
             );
-            this.applications.set(res);
+            console.log(res)
+            this.applications.set(res.filter(e => e.property !== null));
             return res;
         } catch (error) {
             console.error('Error fetching applications:', error);
@@ -55,5 +57,19 @@ export class RentingStore {
         return firstValueFrom(
             this.http.post(`${this.API_URL}/webhook/payment-complete`, data)
         );
+    }
+
+    async fetchMyLeases() {
+        this.loading.set(true);
+        try {
+            const data = await firstValueFrom(
+                this.http.get<Lease[]>(`${this.API_URL}/my-leases`)
+            );
+            this.leases.set(data);
+        } catch (error) {
+            console.error('Failed to fetch leases', error);
+        } finally {
+            this.loading.set(false);
+        }
     }
 }
