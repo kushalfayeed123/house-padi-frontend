@@ -33,24 +33,24 @@
                 variant="warning">
             </app-stats-card>
         </div>
-
+        @if (store.loading()) {
+        <div class="glass-card p-12 rounded-[2rem] flex justify-center">
+            <div class="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin">
+            </div>
+        </div>
+        } @else {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
             <section class="lg:col-span-8 space-y-4">
                 <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">Recent Applications
                 </h3>
 
-                @if (store.loading()) {
-                <div class="glass-card p-12 rounded-[2rem] flex justify-center">
-                    <div class="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin">
-                    </div>
-                </div>
-                } @else {
+
                 <div class="glass-card rounded-[2rem] overflow-hidden">
                     <app-application-list [applications]="store.applications()" (onAction)="handleAction($event)">
                     </app-application-list>
                 </div>
-                }
+
             </section>
 
             <aside class="lg:col-span-4 space-y-4">
@@ -59,8 +59,8 @@
                     (onDeleteAction)="handleDeleteRequest($event)">
                 </app-property-sidebar>
             </aside>
-
         </div>
+        }
     </div>
 </div>
 

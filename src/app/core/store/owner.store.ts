@@ -65,7 +65,6 @@ export class OwnerStore {
    * (since approval triggers Lease preparation and PENDING status on the backend).
    */
   async handleApplicationDecision(id: string, status: 'approved' | 'rejected') {
-    this._loading.set(true);
     try {
       await firstValueFrom(
         this.http.patch(`${this.RENTING_API_URL}/application/${id}/status`, { status })

@@ -19,6 +19,17 @@ export interface Property {
     is_luxury: boolean;
     parking?: boolean;
   };
+  owner: {
+        id: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+        avatarUrl: string;
+        role: string;
+        createdAt: string;
+        phoneNumber: string;
+        kycStatus: string;
+    },
   status: 'draft' | 'available' | 'pending' | 'rented' | 'archived';
   createdAt: string;
   applications: PropertyApplication[];

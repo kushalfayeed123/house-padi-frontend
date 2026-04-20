@@ -63,14 +63,31 @@ export class AuthStore {
     this.setLoading(true);
     try {
       const res = await firstValueFrom(
-        this.http.post<{ access_token: string; user: any }>(`${this.API_URL}/login`, dto)
+        this.http.post<{ access_token: string }>(`${this.API_URL}/login`, dto)
       );
 
+      // 1. Save token and update state
       localStorage.setItem('hp_token', res.access_token);
       this._token.set(res.access_token);
-      this.init();
-      // Navigate to the returnUrl or home if not provided
-      this.router.navigateByUrl(returnUrl);
+
+      // 2. Fetch full profile (Role is retrieved here via /me endpoint)
+      await this.init();
+
+      // 3. Navigate based on the newly fetched role
+      if (returnUrl === '/') {
+        const user = this.user(); // The signal updated by init()
+
+        if (user?.role === 'owner') {
+          this.router.navigate(['/owner']);
+        } else if (user?.role === 'renter') {
+          this.router.navigate(['/renter']);
+        } else {
+          this.router.navigate(['/']);
+        }
+      } else {
+        this.router.navigateByUrl(returnUrl);
+      }
+
     } catch (err: any) {
       this._error.set(err.error?.message || 'Invalid email or password.');
     } finally {

@@ -7,9 +7,7 @@ import { Property } from '../../../data/models/property.model';
 
 @Component({
   selector: 'app-property-sidebar',
-  standalone: true,
   imports: [CommonModule, RouterLink,],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './property-sidebar.html',
   styleUrl: './property-sidebar.css',
 })

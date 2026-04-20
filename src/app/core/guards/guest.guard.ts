@@ -1,20 +1,24 @@
-// src/app/core/guards/guest.guard.ts
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { AuthStore } from '../store/auth.store';
 
-/**
- * Prevents authenticated users from accessing guest-only routes (Login/Register)
- */
 export const guestGuard: CanActivateFn = () => {
   const authStore = inject(AuthStore);
   const router = inject(Router);
 
-  // If the user is already authenticated, send them to the home page
   if (authStore.isAuthenticated()) {
+    const role = authStore.user()?.role; // Assuming user() signal exists in AuthStore
+
+    // Role-based redirection logic
+    if (role === 'owner') {
+      return router.parseUrl('/dashboard/host');
+    } else if (role === 'renter') {
+      return router.parseUrl('/dashboard/tenant');
+    }
+    
+    // Fallback for admin or undefined roles
     return router.parseUrl('/'); 
   }
 
-  // Otherwise, allow access to the login/register screens
   return true;
 };

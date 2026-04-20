@@ -1,70 +1,81 @@
 <div class="overflow-x-auto">
-  <table class="w-full text-left border-separate border-spacing-0">
-    <thead class="bg-slate-100/30 dark:bg-white/5 border-b border-slate-200 dark:border-white/5">
-      <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-        <th class="px-6 py-5">Renter</th>
-        <th class="px-6 py-5">Property</th>
-        <th class="px-6 py-5">Status</th>
-        <th class="px-6 py-5 text-right">Decisions</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-slate-100 dark:divide-white/5">
-      @for (app of applications(); track app.id) {
-        <tr class="hover:bg-brand-primary/[0.02] transition-colors group">
-          <td class="px-6 py-5">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-black text-xs">
-                {{ app.renter?.firstName[0] }}{{ app.renter?.lastName[0] }}
-              </div>
-              <div>
-                <p class="font-bold text-slate-900 dark:text-white">{{ app.renter?.firstName }} {{ app.renter?.lastName }}</p>
-                <p class="text-[10px] text-slate-400 font-black uppercase">{{ app.applied_at | date:'mediumDate' }}</p>
-              </div>
-            </div>
-          </td>
+    <table class="w-full text-left border-separate border-spacing-0">
+        <thead class="bg-slate-100/30 dark:bg-white/5 border-b border-slate-200 dark:border-white/5">
+            <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <th class="px-6 py-5">Renter</th>
+                <th class="px-6 py-5">Property</th>
+                <th class="px-6 py-5">Status</th>
+                <th class="px-6 py-5 text-right">Decisions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+            @for (app of applications(); track app.id) {
+            @if (app.property !== null) {
 
-          <td class="px-6 py-5">
-             <p class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ app.property?.title }}</p>
-          </td>
+            <tr class="hover:bg-brand-primary/[0.02] transition-colors group">
+                <td class="px-6 py-5">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-black text-xs">
+                            {{ app.renter?.firstName[0] }}{{ app.renter?.lastName[0] }}
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900 dark:text-white">{{ app.renter?.firstName }} {{
+                                app.renter?.lastName }}</p>
+                            <p class="text-[10px] text-slate-400 font-black uppercase">{{ app.applied_at |
+                                date:'mediumDate' }}</p>
+                        </div>
+                    </div>
+                </td>
 
-          <td class="px-6 py-5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider"
-              [ngClass]="{
+
+
+                <td [routerLink]="['/properties', app.property.id]" class="px-6 py-5">
+                    <p class="text-sm font-bold text-slate-700 dark:text-slate-300 underline cursor-pointer">{{
+                        app.property?.title }}</p>
+                </td>
+
+
+                <td class="px-6 py-5">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider"
+                        [ngClass]="{
                 'bg-amber-100 text-amber-600 dark:bg-amber-500/10': app.status === 'pending',
                 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10': app.status === 'approved',
                 'bg-rose-100 text-rose-600 dark:bg-rose-500/10': app.status === 'rejected'
               }">
-              <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-              {{ app.status }}
-            </div>
-          </td>
+                        <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                        {{ app.status }}
+                    </div>
+                </td>
 
-          <td class="px-6 py-5 text-right">
-            <div class="flex justify-end gap-2">
-              @if (app.status === 'submitted') {
-                <button (click)="onAction.emit({id: app.id, status: 'rejected'})"
-                  class="p-2.5 rounded-xl text-slate-400 hover:bg-rose-500/10 hover:text-rose-500 transition-all">
-                  <span class="material-symbols-outlined text-[20px]">close</span>
-                </button>
-                <button (click)="onAction.emit({id: app.id, status: 'approved'})"
-                  class="px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black rounded-xl hover:bg-brand-primary dark:hover:bg-brand-primary dark:hover:text-white transition-all shadow-lg">
-                  APPROVE
-                </button>
-              } @else {
-                <span class="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest italic pr-4">
-                  Decision Made
-                </span>
-              }
-            </div>
-          </td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="4" class="px-6 py-20 text-center text-slate-400 italic text-sm">
-            No applications found.
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+                <td class="px-6 py-5 text-right">
+                    <div class="flex justify-end gap-2">
+                        @if (app.status === 'submitted') {
+                        <button (click)="onAction.emit({id: app.id, status: 'rejected'})"
+                            class="p-2.5 rounded-xl text-slate-400 hover:bg-rose-500/10 hover:text-rose-500 transition-all">
+                            <span class="material-symbols-outlined text-[20px]">close</span>
+                        </button>
+                        <button (click)="onAction.emit({id: app.id, status: 'approved'})"
+                            class="px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black rounded-xl hover:bg-brand-primary dark:hover:bg-brand-primary dark:hover:text-white transition-all shadow-lg">
+                            APPROVE
+                        </button>
+                        } @else {
+                        <span
+                            class="text-[10px] font-black text-slate-300 dark:text-slate-600 uppercase tracking-widest italic pr-4">
+                            Decision Made
+                        </span>
+                        }
+                    </div>
+                </td>
+            </tr>
+            }
+            } @empty {
+            <tr>
+                <td colspan="4" class="px-6 py-20 text-center text-slate-400 italic text-sm">
+                    No applications found.
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
 </div>

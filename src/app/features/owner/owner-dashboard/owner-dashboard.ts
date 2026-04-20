@@ -81,7 +81,6 @@ export class OwnerDashboard implements OnInit {
       await this.store.handleApplicationDecision(event.id, event.status);
 
       // 2. Success Feedback (Optional: Inject a ToastService here)
-      console.log(`Application ${event.status} successfully.`);
       this.toast.show(`Application ${event.status} successfully.`, 'success')
 
     } catch (error) {
