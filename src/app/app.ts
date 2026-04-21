@@ -1,7 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from './shared/components/toast/toast';
 import { injectSpeedInsights } from '@vercel/speed-insights';
+import { inject } from "@vercel/analytics"
+
 
 
 @Component({
@@ -13,6 +15,7 @@ import { injectSpeedInsights } from '@vercel/speed-insights';
 export class App implements OnInit {
   ngOnInit(): void {
     injectSpeedInsights();
+    inject()
   }
 
 
